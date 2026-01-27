@@ -1,0 +1,513 @@
+%%-----------------------------------------------------------------------------------
+%% This preamble does the following:
+% Create conditionals so that multiple versions are possible with changing \SHORT, \EMBED & \SHOWAUTHORS conditionals
+% loads packages
+% defines custom commands
+% defines authors and affiliations (see end of page)
+% sets citation style (see end of document)
+%------------------------------------------------------------------------------------
+%STRUCTURE
+% CONDITIONALS
+% GENERIC PACKAGES &
+% GENERIC USER COMMANDS
+% PROJECT-SPECIFIC USER COMMANDS, SETTINGS & PACKAGES
+% --> CITATIONS
+% --> TITLE PAGE
+
+
+\ProvidesPackage{0Preamble_ids}
+
+%%-----------------------------------------------------------------------------------
+% CONDITIONALS
+%%-----------------------------------------------------------------------------------
+%Initiating logicals (define them in the next chunk)
+\newif\ifSHORT % SHORT VERSION
+\newif\ifLONG % LONG VERSION
+\newif\ifEMBED % EMBED for floats within the text
+\newif\ifEND % END for floats at the end of the file
+\newif\ifSHOWAUTHORS % EMBED for floats within the text
+
+\usepackage{setspace}
+% Changing these to true or false changes the document
+\SHORTfalse % short or long version (\SHORTtrue or \SHORTfalse). NB! LONG will include acknoledgements in the main file
+\EMBEDtrue % floats embedded or at the end of the document (\EMBEDtrue or \EMBEDfalse)
+\SHOWAUTHORStrue % Show authors in title or not (\SHOWAUTHORStrue or SHOWAUTHORSfalse)
+%\doublespacing 
+\singlespacing
+
+
+%__________________________________________
+
+
+\usepackage{ifthen} % conditionals
+
+% this will force Working (W) version for TitlePage and CoverLetter
+\ifthenelse{\isundefined{\ForceSHOWAUTHORStrue}}{}{\SHOWAUTHORStrue}
+% It may be confusing, but this is what it does:
+% If \ForceSHOWAUTHORStrue boolean not defined -> do nothing.
+% Else -> Change \SHOWAUTHORS to true to include author names 
+
+
+
+% set the comment environments based on the booleans
+\usepackage{verbatim}  % Instead of \usepackage{comment}
+% Remove the \usepackage{ifthen} line if you're not using it elsewhere
+
+% Replace your current ifSHORT block with:
+\ifSHORT
+	\newenvironment{SHORT}{}{}
+	\newenvironment{LONG}{\comment}{\endcomment}
+\else
+	\LONGtrue
+	\newenvironment{SHORT}{\comment}{\endcomment}
+	\newenvironment{LONG}{}{}
+\fi
+
+\ifEMBED
+	\newenvironment{EMBED}{}{}
+	\newenvironment{END}{\comment}{\endcomment}
+\else
+\ENDtrue
+	\newenvironment{EMBED}{\comment}{\endcomment}
+	\newenvironment{END}{}{}
+\fi
+
+
+
+
+%--------------------------------------------------------------------
+% GENERIC PACKAGES
+%--------------------------------------------------------------------
+
+
+\RequirePackage[l2tabu,orthodox]{nag} % turn on warnings because of bad style
+%% \documentclass[a4paper,12pt,bibliography=totoc]{scrartcl}
+\usepackage[margin=1in]{geometry} %margins one inch
+\setcounter{secnumdepth}{0} % delete numbers
+\usepackage[american]{babel} % was: finnish,american
+% \usepackage[utf8]{inputenc} % allows to type UTF-8 characters like ä,ö,ü,ß % not needed for biblatex/biber
+
+% \usepackage[T1]{fontenc}        % Tries to use Postscript Type 1 Fonts for better rendering
+% \usepackage{lmodern}            % Provides the Latin Modern Font which offers more glyphs than the default Computer Modern
+\usepackage[intlimits]{amsmath} % Provides all mathematical commands
+
+\usepackage{nccmath}
+% \usepackage{bookmark} 			% implements a new bookmark (outline) organization for package hyperref.
+% there was an error: (rerunfilecheck) Rerun to get outlines right or use package 'bookmark'
+% \usepackage{grffile}            % Allow you to include images (like graphicx). Usage: \includegraphics{path/to/file}
+
+% Allows to set units
+% \usepackage[ugly]{units}        % Allows you to type units with correct spacing and font style. Usage: $\unit[100]{m}$ or $\unitfrac[100]{m}{s}$
+
+% Additional packages
+% \usepackage{url}                % Lets you typeset urls. Usage: \url{http://...}
+%\usepackage{breakurl}  
+%\usepackage{burl}         		% Enables linebreaks for urls
+% \usepackage{xspace}             % Use \xpsace in macros to automatically insert space based on context. Usage: \newcommand{\es}{ESPResSo\xspace}
+\usepackage{booktabs}           
+% Source code listings
+% \usepackage{listings}           % Source Code Listings. Usage: \begin{lstlisting}...\end{lstlisting}
+\usepackage{graphicx} 			% for pictures
+
+% Packages added by Miika
+\usepackage[labelsep=period]{caption}			% customise the captions in floating environments. labelsep is what you have after Figure 1 (./:)
+\usepackage{subcaption}
+\usepackage{chngcntr} 			% for renumbering appendix % https://tex.stackexchange.com/a/85779/244928
+%\usepackage{menukeys}		% arrows
+\usepackage{blindtext}			 % lorem ipsum
+%\usepackage{framed}			% boxes
+%% \usepackage{lastpage}
+
+\newcounter{apppage} 	% for page count in appenndix
+
+% \usepackage{zref-totpages} % total number of pages
+%\usepackage{pageslts} % refering to pages, extension of the lastpage package, mixes appendix page numbering
+%\pagenumbering{arabic} % page count in the body
+
+%% kable1 & kableExtra Dependencies. 
+% OBS! Check here if tables from table1 won't work
+
+\usepackage{booktabs} % Nice rules for tables. Usage \begin{tabular}\toprule ... \midrule ... \bottomrule
+\usepackage{tabu} % for full width tables in kable
+\usepackage{pdflscape}		%adds PDF support to the landscape environment of package lscape,
+\usepackage{longtable}
+%\usepackage{array}
+%\usepackage{multirow}
+%\usepackage{wrapfig}
+%\usepackage{float}
+%\usepackage{colortbl}
+%\usepackage{tabu}
+%\usepackage{threeparttable}
+%\usepackage{threeparttablex}
+%\usepackage[normalem]{ulem}
+%\usepackage{makecell}
+\usepackage{xcolor} % Obviously colors. Usage: \color{red} Red text
+
+
+%%------muutettu
+%\usepackage{titling} % ei käytetä koma classin kanssa
+%\pretitle{\huge \centering \bfseries } % use things from title % DO NOT MOVE PACKAGE CALL DOWN
+%% https://tex.stackexchange.com/a/10133/244928
+%
+%\posttitle{\par \vspace{\baselineskip}} % 
+%\preauthor{\centering \normalsize}
+%\postauthor{\par}
+%-----muutettu
+
+
+%\usepackage[ % extract equations
+%active,
+%generate=equations,
+%extract-env={equation,align}
+%]{extract}
+
+\usepackage{chngpage} % margins
+\usepackage[en-US]{datetime2}
+%\usepackage[finnish,english]{babel}
+\usepackage{hyperref}           % Provides clickable links in the PDF-document for \ref
+
+
+% Tikz dependencies
+%\usepackage{physics}
+%%%% \usepackage{amsmath}
+\usepackage{tikz}
+%\usepackage{mathdots}
+%\usepackage{yhmath}
+%\usepackage{cancel}
+%\usepackage{color}
+%\usepackage{siunitx}
+%\usepackage{array}
+%\usepackage{multirow}
+%\usepackage{amssymb}
+%\usepackage{gensymb}
+%\usepackage{tabularx}
+%\usepackage{extarrows}
+%%% \usepackage{booktabs}
+\usetikzlibrary{fadings}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shadows.blur}
+\usetikzlibrary{shapes}
+
+%
+\usepackage{placeins} % \FloatBarrier to disable floats going past some section % https://tex.stackexchange.com/a/2282/244928
+
+
+%____________________________________________________________________
+% packages on trial
+%%% \usepackage{flafter} % no figures before section headings
+
+\usepackage{authoraftertitle} % fetch title,authors, date etc
+%\usepackage{enumitem} % customizations for enumerate. DOES NOT WORK
+
+% \newenvironment{tight_enumerate}{
+%\begin{enumerate}
+%  \setlength{\itemsep}{0pt}
+%  \setlength{\parskip}{-3pt}
+%}{\end{enumerate}}
+%
+%\newenvironment{tight_itemize}{
+%\vspace{-\topsep}
+%\begin{itemize}
+%  \setlength{\itemsep}{0pt}
+%  \setlength{\parskip}{0pt}
+%}{\end{itemize} \vspace{-\topsep}}
+
+%--------------------------------------------------------------------
+%GENERIC USER SPECIFIC COMMANDS
+%--------------------------------------------------------------------
+
+
+% label "arabic"  number
+\makeatletter
+\newcommand{\savepage}[1]{% #1 = label name for page counter
+%%%\AtBeginDocument{\preto\@title{\singlespacing}}% in case it isn't single spaced %% DID NOT WORK!!
+\edef\@currentlabel{\arabic{page}}%
+\label{#1}}
+\makeatother
+
+% Keywords
+\providecommand{\keywords}[1]
+{
+%\small	
+\textbf{Keywords  } #1
+}
+
+\providecommand{\avainsanat}[1]
+{
+%\small	
+\textbf{Avainsanat  } #1
+}
+
+% Word count
+%\newcommand{\detailtexcount}[1]{%
+%	\immediate\write18{texcount -total -inc -sum=1,1 -template="Words, excluding references: {sum}. Floats, excluding appendix: {float}.  Equations: {displaymath}" #1.tex > #1-words.sum }%
+%	\input{#1-words.sum}
+%}
+
+% with line breakes
+\newcommand{\detailtexcount}[1]{%
+\immediate\write18{texcount -total -inc -sum=1,1 -template="Words excluding references, tables, and figures: {sum} \\ Tables \& figures, excluding appendix: {float} \\  Equations: {displaymath}" #1.tex > #1-words.sum }%
+\input{#1-words.sum}
+}
+
+%-template="Words excluding references, tables, and figures: {sum}\n \n Tables \& figures: {float}\n \n Number of math inlines: {inline}\n \n Number of equations: {displaymath}"
+
+%-template="Words excluding references, tables, and figures: {sum} \\ Tables \& figures: {float} \\ Number of math inlines: {inline} \\ Number of equations: {displaymath}"
+
+% include text in SHORT or LONG version
+\newcommand{\toSHORTorLONG}[2]{\ifSHORT {#1} \else {#2} \fi}
+% floats to the version that has them embedded or at the end
+\newcommand{\toEMBEDorEND}[2]{\ifEMBED {#1} \else {#2} \fi}
+
+%Callout
+\newcommand{\InsertFloatAboutHere}[1]{\medskip \hspace*{\fill} [INSERT \autoref{#1} ABOUT HERE] \hspace*{\fill} \medskip} 
+
+% Insert figures with a given name
+\newcommand\InsertFloat[1]{\csname #1\endcsname}
+
+% Creates figures for the 'determinants' article (will be used in combination of the above)
+\newcommand{\GraphCommand}[2]{
+	\begin{figure}[!phtb]
+		
+		\begin{subfigure}{1\linewidth}
+			\centering
+			\includegraphics[width=\textwidth,height=0.45\textheight,keepaspectratio]{#1_men} 
+			\caption{Men}
+			\label{#1_men}
+			\vspace{0.5cm}
+		\end{subfigure}
+		\vspace{0.5cm}
+		\begin{subfigure}{1\linewidth}
+			\centering
+			\includegraphics[width=\textwidth,height=0.45\textheight,keepaspectratio]{#1_women}
+			\caption{Women}
+			\label{#1_women}
+		\end{subfigure}
+		
+		\caption{\titlecap{#2}}
+		%\fnote{\NoteOnClusters}
+		\label{#1}
+	\end{figure}
+}
+
+
+% Commands specifically for the Outcomes article
+
+%footnote for figures using the caption package
+\newcommand\fnote[1]{\captionsetup{font=normal}\caption*{#1}}
+
+
+%%-----------------------------------------------------------------------------------
+% SETTINGS SPECIFIC FOR THIS PROJECT
+%%----------------------------------------------------------------------------------- 
+
+% \newcommand{\NoteOnClusters}{\emph{Note}: Marriage (c1) is the reference category. Other cateogies are Remarriage (c2), Dissolution (c3),  Serial Cohabitation (c4), and Single (c5).}
+
+
+% Font to Times new roman
+\usepackage[defaultsups]{newtxtext}	% text (and superscript in the authors)
+\usepackage{newtxmath}			% math
+%%\setkomafont{disposition}{\bfseries}  % replaced with (egregdoesnotlikesansseriftitles) in a document class call.% Titles. Needed as scartcl is a KOMA-class. Now titles are also in Times new roman
+% https://tex.stackexchange.com/q/615478/244928
+
+% Section headings
+
+%\setkomafont{section}{\normalfont\scshape\fontsize{12}{12}\selectfont\centering}
+%\setkomafont{subsection}{\normalfont\itshape\fontsize{12}{12}\selectfont\centering}
+%\setkomafont{subsubsection}{\qquad\normalfont\itshape\fontsize{12}{12}\selectfont}
+%
+%\renewcommand{\sectionformat}{\thesection\autodot\hspace{1em}}
+%\renewcommand{\subsectionformat}{\thesubsection\autodot\hspace{1em}}
+%\renewcommand{\subsubsectionformat}{\thesubsubsection\autodot\hspace{1em}}
+
+% add period to the subsubsection level
+%\let\oldsubsubsection=\subsubsection
+%\renewcommand\subsubsection[1]{\oldsubsubsection{#1.}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%------------------------------
+
+
+
+
+% add period to the subsubsection level
+% capitalize sections, subsections and captions (manually?
+\usepackage{titlecaps}
+\Addlcwords{is are to on of into onto unto and or both about above across after against around at beneath beside between beyond but by during except for from in inside into near}
+
+
+% Titles and sections in Titlecase
+\let\oldtitle\title
+\renewcommand{\title}[1]{\oldtitle{\titlecap{#1}}} %NB! this might be a very likely source of an error
+
+%\keys{\let\oldsection=\section
+%\renewcommand\section[1]{\oldsection{\titlecap{#1}}}
+%
+%
+%\let\oldsubsection=\subsection
+%\renewcommand\subsection[1]{\oldsubsection{\titlecap{#1}}}
+%
+%\let\oldsubsubsection=\subsubsection
+%\renewcommand\subsubsection[1]{\oldsubsubsection{\titlecap{#1}}}
+
+
+% Capitalize captions for floats!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%\DeclareCaptionTextFormat{casing}{\MakeTitlecase[words = all]{#1}}
+%\captionsetup{textformat=casing}
+% exceptions (upcoming): https://tex.stackexchange.com/a/731798/244928
+
+% Edit how figure captionlabels (Figure 1)
+%\addto\captionsenglish{\renewcommand{\figurename}{\textbf{Fig.}}}
+% \captionsetup{labelfont=bf}
+% The actual caption text  in small caps and italics
+\captionsetup[figure]{labelfont=sc,textfont=sc}
+\captionsetup[table]{textfont=it}
+
+
+%%-----------------------------------------------------------------------------------
+% Affiliations
+% OBS! see titling options above!
+
+
+\usepackage[affil-it]{authblk}	 % affiliations
+% needed for authblk superscripts (https://tex.stackexchange.com/q/667492/244928):
+
+%\renewcommand\AB@authnote[1]{{\normalfont\textsuperscript{#1}}}
+%\renewcommand\AB@affilnote[1]{{\normalfont\textsuperscript{#1}}}
+
+%-----muutettu
+%\pretitle{\huge \centering \bfseries }
+%\posttitle{\par \vspace{\baselineskip}} % 
+%
+%
+%\preauthor{\centering \normalsize}
+%\postauthor{\par}
+
+% https://texdoc.org/serve/KOMA-Script/0
+% ks. table 3.3
+\addtokomafont{author}{\normalsize}
+%-----muutettu
+
+%%----------------------------------------------------------
+
+%fonts
+
+
+
+% aor - add or remove
+
+
+%https://tex.stackexchange.com/a/649919/244928s
+% titlehead 
+
+% \usepackage{scrlayer}% or scrlayer-scrpage which loads scrlayer
+% \DeclareNewLayer[%
+% headsep,
+% foreground,
+% contents={%
+% \begin{minipage}[t]{\textwidth}%
+% 	\usekomafont{titlehead}{\csname @titlehead\endcsname\par}%
+% \end{minipage}\par}
+% ]{titlehead}
+% \DeclarePageStyleByLayers{titlepage}{titlehead}
+%\AddToHook{cmd/maketitle/after}{\thispagestyle{titlepage}} 
+
+
+%--------------------------------------------------------------------------
+% CITING AND REFERENCES
+%--------------------------------------------------------------
+% Refer to memo at "C:\Users\mmak\OneDrive - Väestöliitto ry\FLH-THESIS\citing\Memo_BibLaTex_Biber_Bibtex_Natbib_Latex.docx"
+
+%_____________________________________________________
+%% BIBLATEX CHICAGO:
+%Biblatex dependencies
+%\usepackage[finnish,american]{babel}
+% \usepackage[babel]{csquotes} % nb! obs! produces error
+%\usepackage{etoolbox}
+%\usepackage{keyval}
+%\usepackage{ifthen}
+%\usepackage{url}
+%\usepackage{nameref}
+%\usepackage{xstring}
+%---------------
+
+% CHICAGO CITE STYLE
+% \usepackage[authordate16,natbib=true,backend=biber]{biblatex-chicago}
+% \DeclareDelimFormat{postnotedelim}{\addcomma\space} % CHICAGO page numbers.. %https://tex.stackexchange.com/questions/506809/add-page-number-to-citation-using-biblatex-chicago
+
+% APA
+%% \usepackage[american]{babel} already defined
+\usepackage{csquotes}
+\usepackage[style=ieee,backend=biber,language=american]{biblatex} % apamaxprtauth=7
+
+% remove post note comma biblatex
+%https://tex.stackexchange.com/questions/478282/how-to-change-selectively-the-post-note-comma-in-a-citation-using-biblatex
+%https://tex.stackexchange.com/a/103776/244928
+%\renewcommand{\postnotedelim}{%
+%	\iffieldnums{postnote}
+%	{\addcolon}
+%	{\addspace}}
+
+% Secondary citattions
+\newcommand{\NoParanthesisCite}[1]{\citeauthor{#1}, \citeyear{#1}}
+\newcommand{\autociteAsIn}[3]{({#1}, {#2}, as cited in \citeauthor{#3}, \citeyear{#3})}
+\newcommand{\textciteAsIn}[3]{{#1} ({#2} as cited in \citeauthor{#3}, \citeyear{#3})}
+
+
+%\addbibresource{biblatex-examples.bib}
+% \addbibresource{0MyLibrary.bib} %% ADDED TO MAIN DOCUMENT FOR SUGGESTIONS
+% See also when switching to BIBLATEX FULL-ON
+% https://tex.stackexchange.com/questions/5091/what-to-do-to-switch-to-biblatex
+% https://tex.stackexchange.com/questions/244841/how-to-show-all-the-names-of-three-or-less-authors-in-text/260510#260510
+
+%______________________________________________________
+% NATBIB
+
+%%% \usepackage[natbibapa]{apacite}		% if used with apa or apalike, cannot cite same author and different year. Works fine with true apacite
+%----\usepackage{natbib} 				
+
+% separators
+%https://www.overleaf.com/learn/latex/Natbib_citation_styles
+%----\setcitestyle{aysep={},semicolon,yysep={,},notesep={}} % (Li 2021;Xi 2021) (Me 2021,2022) (Li 1999:25)
+% OBS! will have to add : manually when defining page number
+
+%\bibliographystyle{apacite} % True APA-style
+%\bibliographystyle{apalike2} 
+%-----\bibliographystyle{apalike} % % 3 or more authors et al.
+%\bibliographystyle{apa-good}
+%\bibliographystyle{apa} % 3 or more authors et al.
+
+
+%---------------------------------------------------------------------------
+% FRONT PAGE INFO
+%---------------------------------------------------------------------------
+
+
+
+% Title suggestions
+
+%\vspace{-1.0cm}
+%\titlecap{} % add title 
+\title{Only for you: relevant board game suggestions from BoardGameGeek.com}
+\titlehead{\emph{DATA11001 Introduction to Data Science. Mini Project} \hfill}
+
+\ifSHOWAUTHORS
+\author[1]{Sanni Isokirmo}
+\author[1]{Ahti Katiska}
+\author[1]{Miika Mäki}
+
+\affil[1]{University of Helsinki \break}
+%\affil[.]{sanni.isokirmo@helsinki.fi \break
+%	ahti.katiska@helsinki.fi \break
+%	miika.maki@helsinki.fi}
+\date{\normalsize \DTMnow \vspace{-0.5cm}}
+\else
+\author{\vspace{-1\baselineskip}}
+\date{\normalsize \DTMnow}
+\fi
+
+
+
+
+
+
+

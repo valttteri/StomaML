@@ -1,0 +1,187 @@
+
+%%--------------------------------------------------
+
+%READ ME 
+% Use this like Google docs. Track changes should be on (for you). Make any changes you desire (or comment) and I will make sure it compiles nicely should you encounter any issues.
+
+% This short video will help you get started if needed:
+% https://youtu.be/S6Si-F5ArIw 
+% The video is for an old article but the principle is the same
+
+% Cite like this: (Smith 2021 "Article title") and I will look it up.
+
+% Note that the preamble is in the 0dPreamble_..._Maki.sty file
+% ---> Preamble includes settings, author information, affiliations, and title of the document.
+
+%%%-----------------------------------------------
+
+
+%%%-----------------------------------------------
+% Some settings that cannot be included in the 0Preamble-file
+
+\RequirePackage{snapshot} % creates a .dep file of the dependencies
+\documentclass[a4paper,12pt,bibliography=totoc,numbers=noenddot,sfdefaults=false,abstract=true,notitlepage]{scrartcl} % NB!  % NB! TexPublish reguires this to be on a single line
+\usepackage{0Preamble_Dynamics}
+
+% include all figures inserted with \InsertFloat in texcount
+%TC:macroword \InsertFloat [float]
+
+% do not count stuff inside begin{comment/B}..end{comment/B} 
+%TC:group comment 0 0
+%TC:group B 0 0
+
+%%%%-----------------------------
+\addbibresource{0MyLibrary.bib}
+
+\begin{document} % Document starts here
+	
+	
+	\begin{singlespace}
+		\maketitle % Brings front page information from the 0Preamble-file
+		
+		\begin{abstract}
+			{\parindent0pt % disables indentation for all the text between { and }
+				
+				\blindtext
+				
+				\keywords{xx $\cdot$ yyy  }
+			}% Indent end
+			% consider summarising the main research questions /. hypotheses in the abstract -- at least 90% of people read only the abstract.
+		\end{abstract} \hspace{10pt}
+		
+	\end{singlespace}
+	
+	%%%%-----------------------------------------------
+	%%%% Introduction
+	
+	%\clearpage %OBS!!
+	\section{Introduction}\label{intro}
+	
+	%%%% Define a research territory (1)
+	%% General context of the work (1a)  
+	
+	%% Narrower research area and statement of its importance (1b)
+	%%%% Establish a niche (2)
+	%% Identification of a gap or other need for research (2a)
+	
+	% Specific research question meeting the identified need (2b)
+	
+	%%% Summary
+	% Summary of approach to answer the research question 3a
+	
+	%Announcement of principal findings
+	
+	
+	%%%%--------------------------------------------------
+	%%%% Background - Hypothesis hand in hand with the literature
+	
+	
+	%%%%-----------------------------------------------
+	%%%% Data and Methods
+	
+	
+	\section{Data and Methods}\label{datamethods}
+	
+	Statistics Finland registers a cohabition if two people of the opposite sex coreside for more than 90 days and their age difference is less than 16 years, unless they have common children. Therefore we restrict to unions with age difference less than 16 years. 
+	
+	If divorce date was missing for a couple but they had moved a part, we considered such cases having ended in a divorce.
+	
+	\subsection{Multi-state modelling}
+	
+	We model the relationship status transitions as an irreversible illness-death model \autocite{cookMultistateModelsAnalysis2017} (REF FIND PAGE), where cohabitation, marriage and separation or divorce correspond to healthy, ill and dead, respectively.
+	
+	We discretize time into four quarters annually, as the minimum length of a union is three months. Using a discrete time multi-state framework \autocite{dudelet.al.DiscretetimeMultistateModelsUpcoming}, we can model the transitions within quarters, as the probabilities are obtained from multinomial logistic regression. The equivalent to continuous time would be hazard ratios. (CHECK!! As the industry standard for multi-state modelling is continuous time, we will perform robustness checks with that.)
+	
+	
+	%
+	Instead of hazard ratio's, we will display the probability of a transition within a quarter. 
+	
+	The markov assumption is not needed (DELETE?? for the majority of metrics, and even for those that would technically require it, the violations are often minor) for the life-time risk *ADD DUDEL ET AL* %\autocite{dudelet.al.DiscretetimeMultistateModelsUpcoming}
+	
+	%%%%-----------------------------------------------
+	%%%% Results
+	
+	\section{Results}\label{results}
+	
+	
+	
+	
+	%%%%-----------------------------------------------
+	%%%% Robusteness checks
+	\subsection{Robustness Checks}\label{robustness_checks}
+	
+	
+	
+	%%%%-----------------------------------------------
+	%%%% Discussion and conclusion
+	
+	\section{Discussion}\label{discussion}
+	
+	%%%% Interpretation of results to answer research question
+	
+	%% Surprising results?
+	
+	%%%% Possible weaknesses
+	
+	%%%% Broader implications / Comparison or synthesis with results from literature
+	%% how does relate to other research questions?
+	%% does it support current hypotheses in your field?
+	%% how does it relate with literature (wider than topic of this paper)
+	
+	
+	%%%% Prospects for future research
+	
+	% Conclusion for Article
+	
+	\begin{LONG}
+		\InsertAcknowledgements
+	\end{LONG}
+		
+	%\clearpage
+	%%%--------cd C:\Users\mmak\OneDrive - Väestöliitto ry\FLH-THESIS\1_determinants\1publish_determinantscd C:\Users\mmak\OneDrive - Väestöliitto ry\FLH-THESIS\1_determinants\1publish_determinants---------------------------------------
+	% Bibliography
+	\FloatBarrier
+	%\begin{spacing}{1.3} 
+	\printbibliography
+	%\end{spacing}
+	
+	
+	%TC:ignore 
+	% check that texcount works as intended
+	
+	%%%-----------------------------------------------
+	%% Figures for Submit (S) version
+	
+	% Figures and tables that appear in the body here again for the submit (S) version
+	
+	% Appendice figures already at the end
+	\begin{END}
+		\clearpage
+		
+		\FloatBarrier
+		
+		\listoftables
+		
+		
+		
+		\FloatBarrier
+		
+		
+		\listoffigures
+		
+		
+		
+		\FloatBarrier
+		
+		
+	\end{END}
+
+\savepage{lastpage} % page count 
+	
+
+	
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%---------------------

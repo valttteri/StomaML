@@ -1,0 +1,180 @@
+
+%%--------------------------------------------------
+
+%READ ME 
+% Use this like Google docs. Track changes should be on (for you). Make any changes you desire (or comment) and I will make sure it compiles nicely should you encounter any issues.
+
+% This short video will help you get started if needed:
+% https://youtu.be/S6Si-F5ArIw 
+% The video is for an old article but the principle is the same
+
+% Cite like this: (Smith 2021 "Article title") and I will look it up.
+
+% Note that the preamble is in the 0dPreamble_..._Maki.sty file
+% ---> Preamble includes settings, author information, affiliations, and title of the document.
+
+%%%-----------------------------------------------
+
+
+%%%-----------------------------------------------
+% Some settings that cannot be included in the 0Preamble-file
+
+\RequirePackage{snapshot} % creates a .dep file of the dependencies
+\documentclass[a4paper,12pt,bibliography=totoc,numbers=noenddot,sfdefaults=false,abstract=true,notitlepage]{scrartcl} % NB!  % NB! TexPublish reguires this to be on a single line
+\usepackage{0Preamble_ids}
+
+% include all figures inserted with \InsertFloat in texcount
+%TC:macroword \InsertFloat [float]
+
+% do not count stuff inside begin{comment/B}..end{comment/B} 
+%TC:group comment 0 0
+%TC:group B 0 0
+
+%%%%-----------------------------
+\addbibresource{0MyLibrary.bib}
+
+\begin{document} % Document starts here
+	
+	
+	\begin{singlespace}
+		\maketitle % Brings front page information from the 0Preamble-file
+		
+		\begin{abstract}
+			{\parindent0pt % disables indentation for all the text between { and }
+				
+				\blindtext
+				
+				\keywords{xx $\cdot$ yyy  }
+			}% Indent end
+			% consider summarising the main research questions /. hypotheses in the abstract -- at least 90% of people read only the abstract.
+		\end{abstract} \hspace{10pt}
+		
+	\end{singlespace}
+	
+	%%%%-----------------------------------------------
+	%%%% Introduction
+	
+	%\clearpage %OBS!!
+	\section{Introduction}\label{intro}
+	
+	%%%% Define a research territory (1)
+	%% General context of the work (1a)  
+	
+	%% Narrower research area and statement of its importance (1b)
+	%%%% Establish a niche (2)
+	%% Identification of a gap or other need for research (2a)
+	
+	% Specific research question meeting the identified need (2b)
+	
+	%%% Summary
+	% Summary of approach to answer the research question 3a
+	
+	%Announcement of principal findings
+	
+	
+	%%%%--------------------------------------------------
+	%%%% Background - Hypothesis hand in hand with the literature
+	
+	
+	%%%%-----------------------------------------------
+	%%%% Data and Methods
+	
+	
+	\section{Data}\label{data}
+	
+	\section{Methods}\label{methods}
+	
+	
+	
+	
+	
+	%%%%-----------------------------------------------
+	%%%% Results
+	
+	\section{Results}\label{results}
+	
+	
+	
+	
+	
+	
+	
+	
+	%%%%-----------------------------------------------
+	%%%% Discussion and conclusion
+	
+	\section{Discussion}\label{discussion}
+	
+	%%%% Interpretation of results to answer research question
+	
+	%% Surprising results?
+	
+	%%%% Possible weaknesses
+	
+	%%%% Broader implications / Comparison or synthesis with results from literature
+	%% how does relate to other research questions?
+	%% does it support current hypotheses in your field?
+	%% how does it relate with literature (wider than topic of this paper)
+	
+	
+	%%%% Prospects for future research
+	
+	% Conclusion for Article
+	
+	%\clearpage
+	%%%--------cd C:\Users\mmak\OneDrive - Väestöliitto ry\FLH-THESIS\1_determinants\1publish_determinantscd C:\Users\mmak\OneDrive - Väestöliitto ry\FLH-THESIS\1_determinants\1publish_determinants---------------------------------------
+	% Bibliography
+	\FloatBarrier
+	%\begin{spacing}{1.3} 
+	%\printbibliography
+	%\end{spacing}
+	
+	
+	%TC:ignore 
+	% check that texcount works as intended
+	
+	%%%-----------------------------------------------
+	%% Figures for Submit (S) version
+	
+	% Figures and tables that appear in the body here again for the submit (S) version
+	
+	
+	\savepage{lastpage} % page count 
+	
+	%-------------------------------------------------------------
+	% Appendix
+	%-------------------------------------------------------------
+	% First some settings, bear with me!
+	\clearpage
+	\setcounter{secnumdepth}{3} % add numbers to section headings, needed for prefix in the figures
+	\appendix % start appendix
+	%\counterwithin{figure}{section} % A prefix for figures
+	%\counterwithin{table}{section} % A prefix for tables
+	%\stepcounter{section} % stars numbers from 1 onwards (A.1 etc)
+	
+	% Custom prefixes
+	\renewcommand{\thefigure}{S\arabic{figure}}
+	\setcounter{figure}{0}
+	\renewcommand{\thetable}{S\arabic{table}}
+	\setcounter{table}{0}
+	
+	\pagenumbering{arabic} % page count in arabic numbers
+	\renewcommand{\thepage}{Online supplements \Roman{page}} % A. prefix for  page numbering
+	
+	\addsec{Online Supplements}\label{------APPENDIX------} % KOMA-class section without numbers (same as \section*{}), but will keep the "A."-prefixes in floats and include the section in table of contents
+	
+	\FloatBarrier
+	
+	\clearpage
+	
+	
+	
+	
+	%TC:endignore
+	\savepage{applastpage} % page count
+	
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%---------------------

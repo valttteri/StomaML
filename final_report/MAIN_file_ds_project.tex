@@ -1,0 +1,234 @@
+
+%%--------------------------------------------------
+
+%READ ME 
+% Use this like Google docs. Track changes should be on (for you). Make any changes you desire (or comment) and I will make sure it compiles nicely should you encounter any issues.
+
+% This short video will help you get started if needed:
+% https://youtu.be/S6Si-F5ArIw 
+% The video is for an old article but the principle is the same
+
+% Cite like this: (Smith 2021 "Article title") and I will look it up.
+
+% Note that the preamble is in the 0dPreamble_..._Maki.sty file
+% ---> Preamble includes settings, author information, affiliations, and title of the document.
+
+%%%-----------------------------------------------
+
+%%%-----------------------------------------------
+% Some settings that cannot be included in the 0Preamble-file
+
+\RequirePackage{snapshot} % creates a .dep file of the dependencies
+\documentclass[a4paper,12pt,bibliography=totoc,numbers=noenddot,sfdefaults=false,abstract=true,notitlepage]{scrartcl} % NB!  % NB! TexPublish reguires this to be on a single line
+\usepackage{0Preamble_ids}
+
+% include all figures inserted with \InsertFloat in texcount
+%TC:macroword \InsertFloat [float]
+
+% do not count stuff inside begin{comment/B}..end{comment/B} 
+%TC:group comment 0 0
+%TC:group B 0 0
+
+%%%%-----------------------------
+\addbibresource{0MyLibrary.bib}
+
+\begin{document} % Document starts here
+	
+	
+	\begin{singlespace}
+	\maketitle % Brings front page information from the 0Preamble-file
+		
+	% 	\begin{abstract}
+	% 		{\parindent0pt % disables indentation for all the text between { and }
+				
+	% 			\blindtext
+				
+	% 			\keywords{xx $\cdot$ yyy  }
+	% 		}% Indent end
+	% 		consider summarising the main research questions /. hypotheses in the abstract -- at least 90% of people read only the abstract.
+	% 	\end{abstract} \hspace{10pt}
+		
+	\end{singlespace}
+
+
+	% \newpage
+	
+	%%%%-----------------------------------------------
+	%%%% Introduction
+	
+	%\clearpage %OBS!!
+	\section{Introduction}\label{intro}
+	
+	%%%% Define a research territory (1)
+	%% General context of the work (1a)  
+	%% Narrower research area and statement of its importance (1b)
+	Play\textemdash coming together to engage in a common recreational activity\textemdash is a human universal \autocite{brownHumanUniversalsHuman2004} and essential part in human development \autocite{smithPlayTypesFunctions2005,pellegriniRolePlayHuman2009}. Board games are a popular and accessible form of play that bring family, friends and strangers alike together, and promote well-being across the life-span \autocite{dellangelaBoardGamesEmotional2020,solway2011wellness}.
+
+	%%%% Establish a niche (2)
+	%% Identification of a gap or other need for research (2a)
+	% Specific research question meeting the identified need (2b)
+	But what if a group of people have outplayed the games they own and would like to find some new ones? There are at least 150,000 different board games out there \autocite{wordsratedBoardGamesStatistics2025} so finding a good match can be a time consuming process. A service that would suggest new board games based on the individual taste could come in handy on such occasions.
+	
+	%%% Summary
+	% Summary of approach to answer the research question 3a
+	%Announcement of principal findings
+	This technical report outlineS the steps we made and lessons learned to create a recommendation system for new board games based on the user's ratings in BoardGameGeek.com (BGG) database as well as the technical details of setting up a webpage \url{http://ec2-13-60-174-144.eu-north-1.compute.amazonaws.com/} through which users can find recommendations for new board games. To achieve this, we used non-negative matrix factorization (NMF) with a selected users' review scores to create tailored suggestions for new board games.
+	
+	
+	%%%%-----------------------------------------------
+	%%%% Data and Methods
+	
+	
+	\section{Data}\label{data}
+
+	%BGG Data
+	We chose the biggest board game ratings database BoardGameGeek.com to fetch user ratings and board game metadata, such as playing mechanics and category. As it is openly available, getting a data access was simple and there were no data privacy issues to be addressed.
+
+	Since there are 2.7 million users  and 150,000 boardgames in BGG \autocite{didymus-trueBoardGameGeeksSupportDrive2024,wordsratedBoardGamesStatistics2025}, fetching all of them would not be feasible with the API interface, at least within the scope of this project. Since many users have left no or few reviews, the data would be too sparse if we had taken a random sample. To get a compromise between training matrix sparsity, time constraints and selection bias, we decided to choose 100 guilds (online discussion groups) that represent different geographic regions, target audiences (teens, parents, seniors), genres as well as general and special interest groups. This way we could get 198,167 reviews from 697 reviewers about 21,765 games. The sampling strategy did bias our distribution towards active users, but also allows for reliable training. Users with only few reviews would make the estimation computationally intensive and possibly unreliable.
+	
+	We decided to load our data via the BGG XML API \autocite{bbgBGGXMLAPI22025}. While the data is well preprocessed and clean, getting the data was no simple task.
+
+	First, the API has rate limits that we had to find out by trial and error. We used a base delay of .75 seconds and if the rate was limited, increased the delay exponentially and waited for the maximum of one minute. The maximum batch size for games was 20 and it took some time to find out why the game metadata coverage was so low on larger test runs.
+
+	Second, since the game metadata fetching was unreliable even with the exponential backoff time, we used a game metadata cache file to make sure that if a game metadata had been fetched successfully once, it was stored  on the project home directory.
+
+	Finally, we included only users with at least 25 reviews and fetched the most popular games first to avoid training data matrix sparsity. Our final dataset of users was relatively small (20,000 reviews out of 13 million), since user discovery is a non-trivial problem.
+	
+	
+	\section{Methods}\label{methods}
+
+	Using review scores is the single best way of generating recommendations \autocite{epsteinRangeWhyGeneralists2021}. It seems counterintutive as one would think that categories, genres, sales or other available metadata would be equally helpful. Based on this empirical finding and the scope of the project, we chose to focus solely on the review scores.
+
+	The method we chose to use for data analysis was non-negative matrix factorization (NMF), which is an unsupervised learning algorithm \autocite{dalyStepbyStepNMFExample2023}. We chose NMF as the basis of our recommender system because it is a well known method for such use \autocite{ahmadianRecommenderSystemsBased2025}.
+
+	We combined the usernames and game names into a matrix with the corresponding ratings from each user and imputed NaN's with SoftImpute. For the NMF model we also had to calculate the optimal rank, which we did by iteratively running multiple NMF models. With the calculated default optimal rank we then ran the NMF model with sklearn's implementation and the resulting recommendation matrix giving us estimates on how the user may rate games they haven't rated yet. We used these estimations to show the user the top games they haven't rated yet as well as the actual estimated rating they might give them.
+
+    We created an item-user matrix from the reviews. By the simple fact that the quantity of boardgames far surpass the number of users, the matrix is very sparse. In our
+    first version, we imputed the missing values with zeros. This lead to the NMF biasing the rating estimations heavily towards 0. We decided to impute the missing values
+    with fancyimpute packages SoftImpute, which is a SVD based imputation algorithm \autocite{mazumderSpectralRegularizationAlgorithms2010}.
+
+    We selected the NMF rank hyperparameter via testing multiple rank values, and comparing the root mean square error of the models. In our final version the rank of the NMF
+    was 25. We did not tune the SoftImpute hyperparameters due to time constrainsts, but this and other aspects to improve upon are mentioned in the discussion.
+
+	Regarding the UI we kept it simple with a Boostrap table to show the details for each game and a Chart.js bar table to show the rating distribution within our dataset. 
+	
+	
+	%%%%-----------------------------------------------
+	%%%% Results
+	
+	\section{Results}\label{results}
+	
+	The website can be found on \url{http://ec2-13-60-174-144.eu-north-1.compute.amazonaws.com/}. The user can write their, or someone elses username in the field, the
+    website lists usernames that match the query which are already available in our scraped database. If the user proceeds with a username that is not in our scraped
+    data, a warning is shown, that their BGG user must have at least 1 review, and that the computation will take time. Given the lack of computational power on the EC2
+    instance the app is running on, the recalculation of the recommendation matrix takes multiple minutes. 
+	
+	The user is then directed to a page where they can view their
+    top recommendations, along with rating distribution, predicted review score for each game and categories (genres) for each game. By clicking the game name, a user will be redirected to the appropriate BGG web page for that given game for more details and an option to buy the product online.
+
+    The model (NMF) in testing had a RMSE of ~0.267 on our dataset, which given that the values are from 1-10, is an acceptable error rate.
+	
+	%%%%-----------------------------------------------
+	%%%% Discussion and conclusion
+	
+	\section{Discussion}\label{discussion}
+
+	We created a board game recommendation webpage based on a sample of 198,167 board game reviews to help BoardGameGeek users find new boardgames that match their taste. Below we will reflect on the lessons learned from our project.
+
+	We found it interesting how simple it is to create a recommendation algorithm that works so well. It is reassuring that one can first build something that works and then make it more complex. That is essentially what we did, and will definitely use a similar routine for future data science projects.
+
+	The mini-project canvas helped us to plan our work. Generally the project ended up being a streamlined version the original plan, though sticking very close to the initial plan.  We ended up focusing on the essentials to make a product that produces added value for existing BGG users, rather than making it targeted for a wider audience. This choice helped us to stay focused and kept the workload appropriate for a mini-project. %% Ultimately this was mainly due to scheduling problems as well as partly due to setting such a clear division for work tasks. Perhaps if we had found time to work as a team rather than waiting on each person to finish their indivitual tasks, we could've progressed more steadily and had time for other additions.
+	
+	%%%% Interpretation of results to answer research question
+	
+	
+	%% Surprising results?
+	
+	%%%% Possible weaknesses
+	Setting up API was a valuable learning experience. If we were to redo this, it would probably be better to rely on a ready-made data dump. This is because the rate limits were very restrictive and getting the data in tidy format involved quite a bit of work. In any case, it would have probably been easier to scrape reviews via games, not via users. This is because the games are more easily discoverable. If this project was expanded, we would use the whole BGG database as a training data to get even better estimates. For the scope of this mini-project, 200,000 reviews should be enough.
+
+	%@Sanni, mitä sinä opit tai mitä pohdintoja nousi tätä tehdessä?
+	
+	% Pitää ehkä vähän restructure, mutta lisään nyt tähän kohtaan podintoja anyway. (Myös on vastaan toista pohdintaa myöhemmin)
+	
+	
+
+	%@Ahti,mitä sinä opit tai mitä pohdintoja nousi tätä tehdessä?
+
+    The application as it stands, does not validate the SoftImpute results, and probably with correct tuning of the SoftImpute hyperparameters, the NMF portion of
+    the algorithm stack could entirely be removed. While researching the options of handling the missing values in the item-user matrix, we also considered using a weighted
+    NMF. However, this didn't have an actively maintained library on python, so it would have required us to create the implementation ourself.
+    
+   
+	
+	%%%% Broader implications / Comparison or synthesis with results from literature
+	%% how does relate to other research questions?
+	%% does it support current hypotheses in your field?
+	%% how does it relate with literature (wider than topic of this paper)
+	We also learned how using everyone's strengths can contributed into a great product. One of us had solid experience from front end and boardgames; another from creating appealing user interface and keeping repositories organized; yet another from statistics and managing large projects. Combining these abilities allowed us to have a clear division of labor among the group and make steady progress with weekly checkpoints.
+	
+	
+	%%%% Prospects for future research
+	%, and have an option to rate a curated list to get recommendations even without a BGG user account.
+	%Other than using a larger training data, future work could try out different recommendation algorithms and optimize them with more rigor.
+	
+	% Conclusion for Article
+	This project serves as a good example that when the problem definition is clear-cut and the product creates true added value for the user, it is easy to manage a complex workflow like ours. With a clear purpose and goal in mind, it is easier to stay on track and strive for a product that will bring added value to users.
+	
+	%\clearpage
+	%%%--------cd C:\Users\mmak\OneDrive - Väestöliitto ry\FLH-THESIS\1_determinants\1publish_determinantscd C:\Users\mmak\OneDrive - Väestöliitto ry\FLH-THESIS\1_determinants\1publish_determinants---------------------------------------
+	% Bibliography
+	\FloatBarrier
+	%\begin{spacing}{1.3} 
+	\printbibliography
+	%\end{spacing}
+	
+	
+	%TC:ignore 
+	% check that texcount works as intended
+	
+	%%%-----------------------------------------------
+	%% Figures for Submit (S) version
+	
+	% Figures and tables that appear in the body here again for the submit (S) version
+
+	
+	\savepage{lastpage} % page count 
+	
+	%-------------------------------------------------------------
+	% Appendix
+	%-------------------------------------------------------------
+	% First some settings, bear with me!
+	% \clearpage
+	% \setcounter{secnumdepth}{3} % add numbers to section headings, needed for prefix in the figures
+	% \appendix % start appendix
+	% %\counterwithin{figure}{section} % A prefix for figures
+	% %\counterwithin{table}{section} % A prefix for tables
+	% %\stepcounter{section} % stars numbers from 1 onwards (A.1 etc)
+	
+	% % Custom prefixes
+	% \renewcommand{\thefigure}{S\arabic{figure}}
+	% \setcounter{figure}{0}
+	% \renewcommand{\thetable}{S\arabic{table}}
+	% \setcounter{table}{0}
+	
+	% \pagenumbering{arabic} % page count in arabic numbers
+	% \renewcommand{\thepage}{Appendix \Roman{page}} % A. prefix for  page numbering
+	
+	% \addsec{Appendix}\label{------APPENDIX------} % KOMA-class section without numbers (same as \section*{}), but will keep the "A."-prefixes in floats and include the section in table of contents
+	
+	% \FloatBarrier
+	
+	% \clearpage
+	
+	
+	
+	
+	% %TC:endignore
+	% \savepage{applastpage} % page count
+	
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%---------------------
