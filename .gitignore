@@ -31,3 +31,5 @@ venv/
 .vscode/
 
 # ADD poetry things all things here 
+poetry.lock
+pyproject.toml
