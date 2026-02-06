@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Query
 from fastapi.responses import JSONResponse
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from typing import List
 import uvicorn
 import logging
@@ -25,7 +26,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Stoma Segmentation API", lifespan=lifespan)
 
-
+app.add_middleware(
+    TrustedHostMiddleware, allowed_hosts = ["https://stoma-ml-api-stoma-ml.apps.ocp-test-0.k8s.it.helsinki.fi/","http://localhost:8000"]
+)
 @app.get("/")
 async def root():
     return {"status": "healthy", "message": "Stoma Segmentation API is running"}
