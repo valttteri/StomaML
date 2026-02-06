@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Stoma Segmentation API", lifespan=lifespan)
 
 app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts = ["https://stoma-ml-api-stoma-ml.apps.ocp-test-0.k8s.it.helsinki.fi","http://localhost:8080", "https://0.0.0.0:8000"]
+    TrustedHostMiddleware, allowed_hosts = ["https://stoma-ml-api-stoma-ml.apps.ocp-test-0.k8s.it.helsinki.fi","http://localhost:8080", "https://0.0.0.0:8080"]
 )
 @app.get("/")
 async def root():
@@ -60,4 +60,4 @@ async def predict(files: List[UploadFile] = File(...),conf: float = Query(0.25, 
     return JSONResponse(content={"total_images": len(images_data), "results": results})
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False) #change this for test/prod, no need for reload 
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=False) #change this for test/prod, no need for reload 
