@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY requirements.txt .
 
+RUN chmod -R 777 * 
 #force cpu only torch (may need to change this for openshift maybe????)
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
