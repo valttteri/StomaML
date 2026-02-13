@@ -17,7 +17,8 @@ def call_api_with_files(file_paths: list[Path], conf: float = 0.25) -> dict:
         resp.raise_for_status()
         return resp.json()
     except Exception as e:
-        raise Exception
+        st.exception(e)
+        raise
 
 
 
@@ -32,16 +33,15 @@ def main():
     if st.button("Run analysis") and uploaded_files:
         with tempfile.TemporaryDirectory() as tmpdir:
             temp_paths = []
-
             for uf in uploaded_files:
                 suffix = Path(uf.name).suffix or ".png"
                 with tempfile.NamedTemporaryFile(dir=tmpdir, suffix=suffix, delete=False) as tf:
                     tf.write(uf.getvalue())
                     temp_paths.append(Path(tf.name))
 
-            #api_json = call_api_with_files(temp_paths, conf=0.25)
+            api_json = call_api_with_files(temp_paths, conf=0.25)
 
-        #st.json(api_json)
+        st.json(api_json)
 
         st.success("Done!")
 
