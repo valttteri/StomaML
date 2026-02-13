@@ -1,13 +1,16 @@
 FROM python:3.11
 
-WORKDIR /frontend #location for the source code, the Dockerfile is now in the root foler
+WORKDIR /frontend
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN chmod -R 777 * 
-
-RUN pip install -r requirements.txt
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 8050
 
-CMD ["streamlit", "run", "main.py",  "--server.port=8050", "--server.address=0.0.0.0"]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["streamlit", "run", "main.py", "--server.port=8050", "--server.address=0.0.0.0"]
