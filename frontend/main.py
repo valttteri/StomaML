@@ -43,13 +43,20 @@ def main():
 
         st.json(api_json)
 
-    
+        st.success("Done!")
 
+        st.subheader("Results table")
+        #st.dataframe(df, use_container_width=True)
 
-    # st.download_button('download csv file') # check if how what format this can support, if feeded a csv does it keep formatting? 
+        # CSV ready for download
+        # csv_bytes = df.to_csv(index=False).encode("utf-8")
+        # st.download_button(
+        #     "Download CSV",
+        #     data=csv_bytes,
+        #    file_name="stoma_results.csv",
+        #    mime="text/csv",
+        #)
 
-    return None
-    
 
 if __name__ == "__main__":
     main()
