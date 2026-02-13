@@ -1,1 +1,4 @@
+cat > ~/.streamlit/config.toml <<'EOF'
+[browser]
 gatherUsageStats = false
+EOF
