@@ -13,4 +13,4 @@ RUN chmod +x /entrypoint.sh
 EXPOSE 8050
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["streamlit", "run", "main.py", "--server.port=8050", "--server.address=0.0.0.0"]
+#CMD ["streamlit", "run", "main.py", "--server.port=8050", "--server.address=0.0.0.0"]
