@@ -29,6 +29,7 @@ app = FastAPI(title="Stoma Segmentation API", lifespan=lifespan)
 app.add_middleware(
     TrustedHostMiddleware,allowed_hosts=[
         "stoma-ml-api-stoma-ml.apps.ocp-test-0.k8s.it.helsinki.fi",
+        "stoma-ml-api-stoma-ml.apps.ocp-bm-0.k8s.it.helsinki.fi",
         "localhost",
         "127.0.0.1",
     ],
