@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables / secrets
+.env
+app/.env
+env_file
+*.share
+
+# Logs
+logs/
+*.log
+
+# Virtual environments
+.venv/
+venv/
+.python-version
+
+# Data files
+*.csv
+*.parquet
+*.pickle
+*.pkl
+
+# IDE / editor
+.idea/
+.vscode/
+
+# ADD poetry things all things here 
+poetry.lock
+pyproject.toml
