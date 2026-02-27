@@ -50,19 +50,31 @@ async def predict(files: List[UploadFile] = File(...),conf: float = Query(0.25, 
         raise HTTPException(status_code=400, detail="No files provided")
 
     images_data = []
-    for file in files:
-        contents = await file.read()
-        if not contents:
-            continue
-        images_data.append((file.filename, contents))
+    for f in files:
+        contents = await f.read()
+        if contents:
+            images_data.append((f.filename, contents))
 
     if not images_data:
         raise HTTPException(status_code=400, detail="All uploaded files were empty")
 
-    model = model_manager.get_model()
-    results = batch_inference(model, images_data, conf_threshold=conf)
+    results = batch_inference(model_manager.get_model(), images_data, conf_threshold=conf)
+    cleaned_results = []
+    for res in results:
+        one_result = {
+            "filename": res["filename"],
+            "index": res["index"],
+            "success": res["success"],
+            "density_info": res.get("density_info", {}),
+            "stomata": res.get("stomata", []),
+        }
+        cleaned_results.append(one_result)
 
-    return JSONResponse(content={"total_images": len(images_data), "results": results})
+    response_data = {
+        "total_images": len(results),
+        "results": cleaned_results,
+    }
 
+    return JSONResponse(content=response_data)
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=False, proxy_headers=True,forwarded_allow_ips="*") #change this for test/prod, no need for reload 
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=False, proxy_headers=True,forwarded_allow_ips="*") 
