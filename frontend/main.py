@@ -4,7 +4,10 @@ from pathlib import Path
 import pandas as pd
 import requests
 import streamlit as st
+import streamlit_ext as ste
 from config import API_URL
+
+INFERENCE_COMPLETE = False
 
 class ProgressBar:
     """
@@ -64,7 +67,7 @@ def download_metadata(results):
     """
     json_bytes = json.dumps(results, indent=2).encode("utf-8")
 
-    return st.download_button(
+    return ste.download_button(
         label="Save metadata",
         data=json_bytes,
         file_name="metadata.json",
@@ -73,6 +76,10 @@ def download_metadata(results):
 
 def main():
     st.title("Stomatal density app")
+
+    if "inference_done" not in st.session_state:
+        st.session_state["inference_done"] = False
+
     uploaded_files = st.file_uploader(
         "Upload files for analysis",
         accept_multiple_files=True,
@@ -82,9 +89,10 @@ def main():
     # results: The inference metadata
     # file_names: stomata image file names
     # stomata_counts: number of stomata per image
-    results, file_names, stomata_counts = [], [], []
+    metadata_arr, filename_arr, density_info_arr = [], [], []
 
     if st.button("Run analysis") and uploaded_files:
+        st.session_state["inference_done"] = False
         # Initialize a progress bar
         progress_bar = ProgressBar(0, "Inference in progress...", "stretch")
         progress_bar.render()
@@ -106,34 +114,47 @@ def main():
 
                     # api_json contains inference results of a single image
                     api_json = call_api_with_files(temp_path, conf=0.25)
-                    results.append(api_json)
 
-                    # Test the result csv 
-                    file_names.append(uf.name)
-                    stomata_counts.append(api_json["results"][0]["num_detections"])
-                    
+                    response_data = api_json["results"][0]
+                    filename = uf.name
+                    density_info = list(response_data["density_info"].values())
+                    metadata = response_data["stomata"]
+
+                    metadata_arr.append(metadata)
+                    filename_arr.append(filename)
+                    density_info_arr.append(density_info)
+
 
                     # Update the progress bar
                     progress_bar.update(value=ratio)
 
             progress_bar.update(value=100, text="Inference Finished!")
+            st.session_state["inference_done"] = True
 
     # Display inference results once they are ready
-    if len(results) > 0:
+    if st.session_state["inference_done"]:
         #st.json(results)
         st.subheader("Results table")
 
-        df = pd.DataFrame(
-            {
-                "File": file_names,
-                "Stomata_count": stomata_counts 
-            }
-        )
+        df_cols = [
+            "total_pixels",
+            "non_countable_pixels",
+            "countable_pixels",
+            "stomata_count",
+            "stomatal_density_per_px2",
+            "um_per_px",
+            "stomatal_density_per_mm2"
+        ]
+
+        df = pd.DataFrame(data=density_info_arr, columns=df_cols)
+        df["Filename"] = filename_arr
+        df = df.set_index("Filename")
+
         st.dataframe(df, use_container_width=True)
 
         # CSV ready for download
-        csv_bytes = df.to_csv(index=False).encode("utf-8")
-        st.download_button(
+        csv_bytes = df.to_csv(index=True).encode("utf-8")
+        ste.download_button(
             "Download CSV",
             data=csv_bytes,
             file_name="stoma_results.csv",
@@ -141,7 +162,7 @@ def main():
         )
 
         # Button for downloading metadata
-        download_metadata(results=results)
+        download_metadata(results=metadata_arr)
 
 if __name__ == "__main__":
     main()
