@@ -26,21 +26,21 @@
 	
 	
 	\begin{singlespace}
-		\maketitle % Brings front page information from the 0Preamble-file
+	\maketitle % Brings front page information from the 0Preamble-file
 		
-		% 	\begin{abstract}
-			% 		{\parindent0pt % disables indentation for all the text between { and }
+	% 	\begin{abstract}
+	% 		{\parindent0pt % disables indentation for all the text between { and }
 				
-				% 			\blindtext
+	% 			\blindtext
 				
-				% 			\keywords{xx $\cdot$ yyy  }
-				% 		}% Indent end
-			% 		consider summarising the main research questions /. hypotheses in the abstract -- at least 90% of people read only the abstract.
-			% 	\end{abstract} \hspace{10pt}
+	% 			\keywords{xx $\cdot$ yyy  }
+	% 		}% Indent end
+	% 		consider summarising the main research questions /. hypotheses in the abstract -- at least 90% of people read only the abstract.
+	% 	\end{abstract} \hspace{10pt}
 		
 	\end{singlespace}
-	
-	
+
+
 	% \newpage
 	
 	%%%%-----------------------------------------------
@@ -49,15 +49,33 @@
 	%\clearpage %OBS!!
 	\section{Introduction}\label{intro}
 	
-	Stomatal sizes, shapes and densities fluctuate by environmental factors \autocite{hetheringtonRoleStomataSensing2003, cassonInfluenceEnvironmentalFactors2008, bertolinoImpactStomatalDensity2019}. Analysing stomatal characteristics is crucial for understanding plant responses to environmental and climate changes \autocite{hetheringtonRoleStomataSensing2003, yanContrastingResponsesLeaf2017, liangStomatalResponsesTerrestrial2023}.
+	%%%% Define a research territory (1)
+	%% General context of the work (1a)  
+	%% Narrower research area and statement of its importance (1b)
+
+	Stomatamal sizes, shapes and densities fluctuate by environmental factors. Analysing stomatal characteristics is crucial for understanding plant responses to environmental and climate changes.
+
+	%stomaAI
 	
-	Several deep learning-based tools have been developed for automated stomatal phenotyping, including StomataCounter \autocite{fetterStomataCounterNeuralNetwork2019}, StomaAI \autocite{saiStomaAIEfficientUserfriendly2023}, and semantic segmentation approaches for morphometry and conductance estimation \autocite{gibbsDeepLearningMethod2021}. Despite rapid progress, most existing methods are tailored to specific species and microscopic setups, which can compromise performance when applied to different species or imaging conditions \autocite{gibbsApplicationDeepLearning2024}.
+	%existing software
+
+	Images of birch leaves cannot currently be handled automatically with existing solutions \autocite{saiStomaAIEfficientUserfriendly2023}. Instead, the stomata for birch tree leaves must be counted manually which is extremely time consuming and forms a significant bottleneck in research workflows. This is because the topography of birch leaf surfaces are uneven, making parts of the images blurry even if one would try to stack multiple images. In addition, some leaf structures, like veins or trichomes cannot contain stomata, and should be excluded from a valid countable area. In order to be able to identify stomata and achieve at a meaningful stomatal density, a targeted solution for birch leaves is needed.
 	
-	Images of birch leaves cannot currently be handled automatically with existing solutions \autocite{saiStomaAIEfficientUserfriendly2023}. Instead, the stomata for birch tree leaves must be counted manually which is extremely time consuming and forms a significant bottleneck in research workflows \autocite{saiStomaAIEfficientUserfriendly2023, gibbsApplicationDeepLearning2024}. This is because the topography of birch leaf surfaces are uneven, making parts of the images blurry even if one would try to stack multiple images. In addition, some leaf structures, like veins or trichomes cannot contain stomata, and should be excluded from a valid countable area \autocite{valkamaComparativeAnalysisLeaf2003}. In order to be able to identify stomata and achieve a meaningful stomatal density, a targeted solution for birch leaves is needed.
+	%birch, difficult case
 	
-	This project addresses the need for automated stomata detection and density calculation in birch tree leaves, enabling large-scale genomic studies. With automation the analysis of tens of images could be done quickly, and a subsequent correlation study would be made significantly easier.
+	This project addresses the need for automated stomata detection and density calculation in birch tree leaves, enabling large-scale genomic studies. With automation the analysis of tens of images could be done quickly, and a subsequent correlation study would be made significantly easier.  
 	
-	We have developed a standalone web application that automatically detects and quantifies stomata in images of birch leaves. Users will upload batches of leaf images, and the system will output a CSV file containing stomata counts per image, countable area of stomata (excluding veins and artifacts), stomatal density & stomata size measurements. 
+
+	%%%% Establish a niche (2)
+	%% Identification of a gap or other need for research (2a)
+	% Specific research question meeting the identified need (2b)
+	
+	
+	%%% Summary
+	% Summary of approach to answer the research question 3a
+	%Announcement of principal findings
+
+	We have developed a standalone web application that automatically gives detects and quantifies stomata in images of birch leaves.  Users will upload batches of leaf images, and the system will output a CSV file containing stomata counts per image, countable area of stomata (excluding veins and artifacts, stomatal density \& stomata size measurements. The success criterion will be accurately identifying the stomata, mask veins and artifacts and calculate density values that on average closely match manual counts.
 	
 	
 	%%%%-----------------------------------------------
@@ -65,28 +83,28 @@
 	
 	
 	\section{Data}\label{data}
-	
+
 	We used 376 microscope images that were magnified 10-fold. The images had been taken and were provided by the client, Department of Organismal and Evolutionary Biology at 
-	Faculty of Biological and Environmental Sciences  at the University of Helsinki.
-	
+    Faculty of Biological and Environmental Sciences  at the University of Helsinki.
+
 	Each image had an average of 40 stomatal pores. In addition, there are trichomes, veins, blurred areas as well as what we call \emph{nothing} \textemdash or areas outside of the leaves or small holes. In total, we identified XXXXX objects during training. Please refer to \autoref{img/example_image} for an example image.
-	
+
 	\begin{figure}
 		\includegraphics[width=\linewidth]{img/Birch_2-106-4-4-303MW-1_ch00_SV}
 		\caption{Example image demonstrating stomata, trichomes, veins, 'nothing' and blurry areas}
 		\label{img/example_image}
 		%\fnote{\NoteOnSource}
 	\end{figure}
-	
+
 	
 	\section{Methods}\label{methods}
-	
+
 	We used Roboflow for annotating and training our computer vision models \autocite{dwyer2024roboflow}. Roboflow makes the tedious annotation somewhat more tolerable: There is a possibility to add and manage multiple object classes, a smart selection tool that runs on SAM 3 \autocite{carionSAM3Segment2025}, and convenient way of assigning images for annotation among project members. After annotating the first 100 images, we used the existing models to pre-annote the rest of the pictures. Still the annotation took a large share of our total time with the project. Luckily, the  client could mobilize five people to help us annotate the non-countable area and do sanity checks for the stomatal detection.
-	
+
 	Roboflow also makes it convenient to train and test the models. The model could be exported to deployment directly from roboflow.
-	
+
 	%@sammy & @make, could you write here about the machine learning part?
-	
+
 	
 	%@mia & @valtteri, could you write here about the deployment (your approach to what you did)
 	
@@ -100,26 +118,26 @@
 	%%%% Discussion and conclusion
 	
 	\section{Discussion}\label{discussion}
-	
+
 	%summary
 	Our group created a web application that automatically counts stomatal counts, densities, sizes and non-countable area. 
-	
-	
+
+
 	%%%% Interpretation of results to answer research question
 	
 	
-	
+
 	%@sammy & @make, could you write here about the machine learning part? What worked, what were the challanges? Possible weaknesses of our approach?
-	
+
 	%@mia & @valtteri, could you reflect on the deployment part (openshift, stress test, scalability etc.)
-	
-	
+
+
 	%% Surprising results?
 	
 	%%%% Possible weaknesses
 	
-	
-	
+    
+   
 	
 	%%%% Broader implications / Comparison or synthesis with results from literature
 	%% how does relate to other research questions?
@@ -150,7 +168,7 @@
 	%% Figures for Submit (S) version
 	
 	% Figures and tables that appear in the body here again for the submit (S) version
-	
+
 	
 	\savepage{lastpage} % page count 
 	

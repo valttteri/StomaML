@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.16)  24 FEB 2026 09:31
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.16)  3 MAR 2026 15:43
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1263,7 +1263,7 @@ Class scrartcl Info: loading recommended package `bookmark'.
 (scrartcl)           `bookmarkpackage=false' before \begin{document} and
 (scrartcl)           you can avoid this message adding:
 (scrartcl)             \usepackage{bookmark}
-(scrartcl)           before \begin{document} on input line 35.
+(scrartcl)           before \begin{document} on input line 25.
  (c:/texlive/2025/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
  (c:/texlive/2025/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
@@ -1364,7 +1364,7 @@ Package fontspec Info:
 (fontspec)             <->s*[1]"[TeXGyreTermesX-BoldSlanted.otf]/OT:script=latn;language=dflt;-ss05;+tnum;+lnum;+smcp;+pcap;mapping=tex-text;"
 
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 35.
+(Font)              scaled to size 12.0pt on input line 25.
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 Package csquotes Info: Adjusting default style.
@@ -1372,61 +1372,61 @@ Package csquotes Info: Redefining alias 'default' -> 'american'.
  (./MAIN_file_ds_project.aux)
 \openout1 = `MAIN_file_ds_project.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/ntxmi/m/it on input line 35.
-LaTeX Font Info:    Trying to load font information for OML+ntxmi on input line 35.
+LaTeX Font Info:    Checking defaults for OML/ntxmi/m/it on input line 25.
+LaTeX Font Info:    Trying to load font information for OML+ntxmi on input line 25.
  (c:/texlive/2025/texmf-dist/tex/latex/newtx/omlntxmi.fd
 File: omlntxmi.fd 2015/08/25 Fontinst v1.933 font definitions for OML/ntxmi.
 )
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 35.
-LaTeX Font Info:    Trying to load font information for U+ntxexa on input line 35.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 25.
+LaTeX Font Info:    Trying to load font information for U+ntxexa on input line 25.
  (c:/texlive/2025/texmf-dist/tex/latex/newtx/untxexa.fd
 File: untxexa.fd 2012/04/16 Fontinst v1.933 font definitions for U/ntxexa.
 )
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 35.
-LaTeX Font Info:    Trying to load font information for LMS+ntxsy on input line 35.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 25.
+LaTeX Font Info:    Trying to load font information for LMS+ntxsy on input line 25.
  (c:/texlive/2025/texmf-dist/tex/latex/newtx/lmsntxsy.fd
 File: lmsntxsy.fd 2016/07/02 Fontinst v1.933 font definitions for LMS/ntxsy.
 )
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 35.
-LaTeX Font Info:    Trying to load font information for LMX+ntxexx on input line 35.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 25.
+LaTeX Font Info:    Trying to load font information for LMX+ntxexx on input line 25.
  (c:/texlive/2025/texmf-dist/tex/latex/newtx/lmxntxexx.fd
 File: lmxntxexx.fd 2016/07/03 Fontinst v1.933 font definitions for LMX/ntxexx.
 )
-LaTeX Font Info:    ... okay on input line 35.
-Package scrbase Info: activating american \abstractname on input line 35.
-Package scrbase Info: activating american \partname on input line 35.
-Package scrbase Info: activating american \figurename on input line 35.
-Package scrbase Info: activating american \tablename on input line 35.
-Package scrbase Info: activating american \contentsname on input line 35.
-Package scrbase Info: activating american \listfigurename on input line 35.
-Package scrbase Info: activating american \listtablename on input line 35.
-Package scrbase Info: activating american \refname on input line 35.
-Package scrbase Info: activating american \indexname on input line 35.
-Package nag Info: pgf.sty is broken: disabling dollar check on input line 35.
-Package nag Info: Command \frontmatter not defined, skipping amendment on input line 35.
-Package nag Info: Command \mainmatter not defined, skipping amendment on input line 35.
-Package nag Info: Command \backmatter not defined, skipping amendment on input line 35.
-Package nag Info: Command \RaggedLeft not defined, skipping amendment on input line 35.
-Package nag Info: Command \RaggedRight not defined, skipping amendment on input line 35.
+LaTeX Font Info:    ... okay on input line 25.
+Package scrbase Info: activating american \abstractname on input line 25.
+Package scrbase Info: activating american \partname on input line 25.
+Package scrbase Info: activating american \figurename on input line 25.
+Package scrbase Info: activating american \tablename on input line 25.
+Package scrbase Info: activating american \contentsname on input line 25.
+Package scrbase Info: activating american \listfigurename on input line 25.
+Package scrbase Info: activating american \listtablename on input line 25.
+Package scrbase Info: activating american \refname on input line 25.
+Package scrbase Info: activating american \indexname on input line 25.
+Package nag Info: pgf.sty is broken: disabling dollar check on input line 25.
+Package nag Info: Command \frontmatter not defined, skipping amendment on input line 25.
+Package nag Info: Command \mainmatter not defined, skipping amendment on input line 25.
+Package nag Info: Command \backmatter not defined, skipping amendment on input line 25.
+Package nag Info: Command \RaggedLeft not defined, skipping amendment on input line 25.
+Package nag Info: Command \RaggedRight not defined, skipping amendment on input line 25.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1462,8 +1462,8 @@ Package nag Info: Command \RaggedRight not defined, skipping amendment on input 
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Info: Command `\dddot' is already robust on input line 35.
-LaTeX Info: Command `\ddddot' is already robust on input line 35.
+LaTeX Info: Command `\dddot' is already robust on input line 25.
+LaTeX Info: Command `\ddddot' is already robust on input line 25.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: longtable package is loaded.
@@ -1471,7 +1471,7 @@ Package caption Info: longtable package is loaded.
 Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 )
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 35.
+Package hyperref Info: Link coloring OFF on input line 25.
 Package biblatex Info: Trying to load language 'american'...
 Package biblatex Info: ... file 'american.lbx' found.
  (c:/texlive/2025/texmf-dist/tex/latex/biblatex/lbx/american.lbx
@@ -1495,105 +1495,108 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'MAIN_file_ds_project.bbl' found.
  (./MAIN_file_ds_project.bbl)
-Package biblatex Info: Reference section=0 on input line 35.
-Package biblatex Info: Reference segment=0 on input line 35.
-Package nag Info: Command \hc@caption not defined, skipping amendment on input line 35.
-Package nag Info: Command \topcaption not defined, skipping amendment on input line 35.
+Package biblatex Info: Reference section=0 on input line 25.
+Package biblatex Info: Reference segment=0 on input line 25.
+Package nag Info: Command \hc@caption not defined, skipping amendment on input line 25.
+Package nag Info: Command \topcaption not defined, skipping amendment on input line 25.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/it' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 24.88pt on input line 39.
+(Font)              scaled to size 24.88pt on input line 29.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 17.28pt on input line 39.
-LaTeX Font Info:    Trying to load font information for OT1+minntx on input line 39.
+(Font)              scaled to size 17.28pt on input line 29.
+LaTeX Font Info:    Trying to load font information for OT1+minntx on input line 29.
  (c:/texlive/2025/texmf-dist/tex/latex/newtx/ot1minntx.fd
 File: ot1minntx.fd 2023/09/09 v1.1 font definition file for OT1/minntx
 )
 LaTeX Font Info:    Font shape `OT1/minntx/m/n' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `OT1/minntx/m/n' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `OT1/minntx/m/n' will be
-(Font)              scaled to size 6.6pt on input line 39.
+(Font)              scaled to size 6.6pt on input line 29.
 LaTeX Font Info:    Font shape `OML/ntxmi/m/it' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `OML/ntxmi/m/it' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `OML/ntxmi/m/it' will be
-(Font)              scaled to size 6.6pt on input line 39.
+(Font)              scaled to size 6.6pt on input line 29.
 LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 6.6pt on input line 39.
+(Font)              scaled to size 6.6pt on input line 29.
 LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 6.6pt on input line 39.
-LaTeX Font Info:    Trying to load font information for U+ntxmia on input line 39.
+(Font)              scaled to size 6.6pt on input line 29.
+LaTeX Font Info:    Trying to load font information for U+ntxmia on input line 29.
  (c:/texlive/2025/texmf-dist/tex/latex/newtx/untxmia.fd
 File: untxmia.fd 2024/04/09 Fontinst v1.933 font definitions for U/ntxmia.
 )
 LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 6.6pt on input line 39.
-LaTeX Font Info:    Trying to load font information for U+ntxsym on input line 39.
+(Font)              scaled to size 6.6pt on input line 29.
+LaTeX Font Info:    Trying to load font information for U+ntxsym on input line 29.
  (c:/texlive/2025/texmf-dist/tex/latex/newtx/untxsym.fd
 File: untxsym.fd 2023/08/16 Fontinst v1.933 font definitions for U/ntxsym.
 )
 LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 6.6pt on input line 39.
-LaTeX Font Info:    Trying to load font information for U+ntxsyc on input line 39.
+(Font)              scaled to size 6.6pt on input line 29.
+LaTeX Font Info:    Trying to load font information for U+ntxsyc on input line 29.
  (c:/texlive/2025/texmf-dist/tex/latex/newtx/untxsyc.fd
 File: untxsyc.fd 2012/04/12 Fontinst v1.933 font definitions for U/ntxsyc.
 )
 LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 6.6pt on input line 39.
+(Font)              scaled to size 6.6pt on input line 29.
 LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 12.0pt on input line 39.
+(Font)              scaled to size 12.0pt on input line 29.
 LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 6.6pt on input line 39.
+(Font)              scaled to size 6.6pt on input line 29.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/it' will be
-(Font)              scaled to size 8.8pt on input line 39.
+(Font)              scaled to size 8.8pt on input line 29.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 17.28pt on input line 60.
-File: img/birch2_1-26-4-5-197MW-18_ch00_SV_png.jpg Graphic file (type bmp)
-<img/birch2_1-26-4-5-197MW-18_ch00_SV_png.jpg>
-LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/sc' will be
-(Font)              scaled to size 12.0pt on input line 94.
-
-Underfull \hbox (badness 1097) in paragraph at lines 94--94
-[][][]|\TU/TeXGyreTermesX(0)/m/sc/12 Example image demonstrating stomata, trichomes, veins, ’nothing’ and
- []
-
+(Font)              scaled to size 17.28pt on input line 50.
 
 
 [1
 
 
 ]
+File: img/Birch_2-106-4-4-303MW-1_ch00_SV.png Graphic file (type bmp)
+<img/Birch_2-106-4-4-303MW-1_ch00_SV.png>
+LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/sc' will be
+(Font)              scaled to size 12.0pt on input line 74.
+
+Underfull \hbox (badness 1097) in paragraph at lines 74--74
+[][][]|\TU/TeXGyreTermesX(0)/m/sc/12 Example image demonstrating stomata, trichomes, veins, ’nothing’ and
+ []
+
+
 
 [2]
+
+[3]
 
 Package caption Warning: Unused \captionsetup[table] on input line 363.
 See the caption package documentation for explanation.
@@ -1601,7 +1604,7 @@ See the caption package documentation for explanation.
 No complaints by nag.
 
 
-[3] (./MAIN_file_ds_project.aux)
+[4] (./MAIN_file_ds_project.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2020/03/25>
@@ -1616,12 +1619,12 @@ Package logreq Info: Writing requests to 'MAIN_file_ds_project.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 46346 strings out of 468527
- 949591 string characters out of 5451377
- 1989862 words of memory out of 5000000
- 74004 multiletter control sequences out of 15000+600000
+ 46441 strings out of 468527
+ 953856 string characters out of 5451377
+ 2003437 words of memory out of 5000000
+ 74099 multiletter control sequences out of 15000+600000
  639264 words of font info for 85 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 108i,7n,107p,11000b,5055s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,7n,107p,11000b,5251s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on MAIN_file_ds_project.pdf (3 pages).
+Output written on MAIN_file_ds_project.pdf (4 pages).
