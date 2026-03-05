@@ -1,6 +1,8 @@
 import json
 import tempfile
 from pathlib import Path
+from datetime import datetime, timedelta
+from collections import deque
 import pandas as pd
 import requests
 import streamlit as st
@@ -18,7 +20,7 @@ class ProgressBar:
     """
     def __init__(self, value: int, text: str, width: str):
         self.value = value
-        self.text = text
+        self.text = ""
         self.width = width
         self.progress_bar = st.progress(value=self.value, text=self.text, width=self.width)
     
@@ -29,10 +31,55 @@ class ProgressBar:
         self.value = value
 
         if text is not None:
-            self.text = text
+            #self.text = text
+            self.text = ""
 
         self.progress_bar = self.progress_bar.progress(value=self.value, text=self.text, width=self.width)
         return self.progress_bar
+    
+class RemainingTime:
+    """
+    Class for approximating the remaining inference time
+
+    Params:
+    total_files: the number of uploaded files
+    """
+    def __init__(self, total_files: int):
+        self.total_files = total_files
+        self.processed_files = 0
+        self.times = deque()
+
+    def get_update(self, time: datetime):
+        """
+        Update the remaining time approximation
+
+        Params:
+        time: The inference time of a single image
+        """
+        self.processed_files += 1
+        self.times.append(time)
+        
+        if len(self.times) < 5: # Don't return an approximation immediately
+            return "..."
+        if len(self.times) > 15: # Only keep track of 15 latest inference times
+            self.times.popleft()
+
+        total_time = sum(self.times, timedelta())
+        
+        average_time = total_time / len(self.times)
+        remaining_files = self.total_files - self.processed_files
+        
+        # An approximation of how much longer the inference will take
+        remaining_time = remaining_files * average_time
+
+        # Format remaining time as X min Y s
+        total_seconds = remaining_time.total_seconds()
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+
+        formatted_time = f"{minutes} min {seconds} s"
+
+        return formatted_time
 
 
 def call_api_with_files(
@@ -97,7 +144,7 @@ def download_metadata(results: list):
     )
 
 def main():
-    st.title("Stomatal density app")
+    st.title("StomaML")
 
     if "inference_done" not in st.session_state:
         st.session_state["inference_done"] = False
@@ -128,7 +175,9 @@ def main():
     if st.button("Run analysis") and uploaded_files:
         st.session_state["inference_done"] = False
         # Initialize a progress bar
-        progress_bar = ProgressBar(0, "Inference in progress...", "stretch")
+        time_approximator = RemainingTime(total_files=len(uploaded_files))
+        inference_status = st.empty()
+        progress_bar = ProgressBar(0, "Inference in progress. Time remaining:", "stretch")
         progress_bar.render()
 
 
@@ -147,7 +196,12 @@ def main():
                     temp_path.append(Path(tf.name))
 
                     # api_json contains inference results of a single image
+                    start = datetime.now()
                     api_json = call_api_with_files(temp_path, conf=0.25, scale=scale_value)
+                    end = datetime.now()
+                    
+                    total_time = end - start
+                    time_left = time_approximator.get_update(time=total_time) # Get an approximation of remaining inference time
 
                     response_data = api_json["results"][0]
                     filename = uf.name
@@ -159,10 +213,12 @@ def main():
                     filename_arr.append(filename)
                     density_info_arr.append(density_info)
 
-                    # Update the progress bar
+                    # Update the progress bar and inference status
                     progress_bar.update(value=ratio)
+                    inference_status.markdown(f"Inference in progress<br>Time remaining: {time_left}", unsafe_allow_html=True)
 
-            progress_bar.update(value=100, text=f"Inference Finished!")
+            progress_bar.update(value=100)
+            inference_status.write("Inference done!")
             st.session_state["inference_done"] = True
 
     # Display inference results once they are ready
