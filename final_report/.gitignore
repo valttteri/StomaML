@@ -342,3 +342,9 @@ files_to_publisher/
 code/
 composite/
 backup/
+
+# Additional files, that were not picked up by the above
+MAIN_file_ds_project.dep
+MAIN_file_ds_project.log
+
+#git rm --cached put/here/your/file.ext
