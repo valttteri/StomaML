@@ -7,8 +7,6 @@ import streamlit as st
 import streamlit_ext as ste
 from config import API_URL
 
-INFERENCE_COMPLETE = False
-
 class ProgressBar:
     """
     Class for inference progress bar
@@ -37,13 +35,18 @@ class ProgressBar:
         return self.progress_bar
 
 
-def call_api_with_files(file_paths: list[Path], conf: float = 0.25) -> dict:
+def call_api_with_files(
+        file_paths: list[Path],
+        conf: float = 0.25,
+        scale: float = 10/46
+    ) -> dict:
     """
     Function for executing inference on an image
 
     Params:
     file_paths: List with a single image path
     conf: Confidence level for the YOLO model
+    scale: Image scale in micrometers
 
     Returns:
     Inference results in JSON format
@@ -53,7 +56,7 @@ def call_api_with_files(file_paths: list[Path], conf: float = 0.25) -> dict:
         for p in file_paths
     ]
     try:
-        resp = requests.post(API_URL, params={"conf": conf}, files=files_payload, timeout=120)
+        resp = requests.post(API_URL, params={"conf": conf, "scale": scale}, files=files_payload, timeout=120)
         resp.raise_for_status()
         return resp.json()
     except Exception as e:
@@ -61,14 +64,33 @@ def call_api_with_files(file_paths: list[Path], conf: float = 0.25) -> dict:
         raise
 
 
-def download_metadata(results):
+def download_csv(df: pd.DataFrame):
+    """
+    Button for downloading a csv file with stomatal density info etc.
+
+    Params:
+    df: a dataframe containing all relevant data
+    """
+    csv_bytes = df.to_csv(index=True).encode("utf-8")
+
+    return ste.download_button(
+        "Download CSV",
+        data=csv_bytes,
+        file_name="stoma_results.csv",
+        mime="text/csv",
+    )
+
+def download_metadata(results: list):
     """
     Turn the inference metadata into a JSON object, and return a download button
+
+    Params:
+    results: a list containing metadata of each individual stomata
     """
     json_bytes = json.dumps(results, indent=2).encode("utf-8")
 
     return ste.download_button(
-        label="Save metadata",
+        label="Download Metadata",
         data=json_bytes,
         file_name="metadata.json",
         mime="application/json"
@@ -86,10 +108,22 @@ def main():
         type=["jpg", "jpeg", "png"],
     )
 
-    # results: The inference metadata
-    # file_names: stomata image file names
-    # stomata_counts: number of stomata per image
+    # metadata_arr: The inference metadata
+    # filename_arr: stomata image file names
+    # density_info_arr: data to be included in the csv file
     metadata_arr, filename_arr, density_info_arr = [], [], []
+
+    # Slider for defining image scale in um / pixel
+    scale_slider = st.slider(
+        label="Image Scale",
+        min_value=5,
+        max_value=30,
+        value=10,
+        step=5,
+        format="%d $\mu$m",
+        width=200
+    )
+    scale_value = scale_slider / 46
 
     if st.button("Run analysis") and uploaded_files:
         st.session_state["inference_done"] = False
@@ -113,22 +147,22 @@ def main():
                     temp_path.append(Path(tf.name))
 
                     # api_json contains inference results of a single image
-                    api_json = call_api_with_files(temp_path, conf=0.25)
+                    api_json = call_api_with_files(temp_path, conf=0.25, scale=scale_value)
 
                     response_data = api_json["results"][0]
                     filename = uf.name
                     density_info = list(response_data["density_info"].values())
                     metadata = response_data["stomata"]
 
+                    # Save data from a single inference result
                     metadata_arr.append(metadata)
                     filename_arr.append(filename)
                     density_info_arr.append(density_info)
 
-
                     # Update the progress bar
                     progress_bar.update(value=ratio)
 
-            progress_bar.update(value=100, text="Inference Finished!")
+            progress_bar.update(value=100, text=f"Inference Finished!")
             st.session_state["inference_done"] = True
 
     # Display inference results once they are ready
@@ -152,17 +186,15 @@ def main():
 
         st.dataframe(df, use_container_width=True)
 
-        # CSV ready for download
-        csv_bytes = df.to_csv(index=True).encode("utf-8")
-        ste.download_button(
-            "Download CSV",
-            data=csv_bytes,
-            file_name="stoma_results.csv",
-            mime="text/csv",
-        )
+        col1, col2 = st.columns(spec=[1, 1], width=250)
+
+        # Button for downloading csv
+        with col1:
+            download_csv(df=df)
 
         # Button for downloading metadata
-        download_metadata(results=metadata_arr)
+        with col2:
+            download_metadata(results=metadata_arr)
 
 if __name__ == "__main__":
     main()
