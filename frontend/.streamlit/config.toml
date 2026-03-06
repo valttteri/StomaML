@@ -1,4 +1,12 @@
 cat > ~/.streamlit/config.toml <<'EOF'
 [browser]
 gatherUsageStats = false
+
+[server]
+enableCORS = true
+corsAllowedOrigins = [
+    "http://localhost:8501",
+    "https://stoma-ml-ui-stoma-ml.apps.ocp-bm-0.k8s.it.helsinki.fi",
+    "https://stomaml.helsinki.fi"
+]
 EOF
