@@ -43,7 +43,7 @@ async def health_check():
     return {"status": "healthy", "model_loaded": model_manager.is_loaded()}
 
 @app.post("/predict")
-async def predict(files: List[UploadFile] = File(...),conf: float = Query(0.25, ge=0.0, le=1.0)):
+async def predict(files: List[UploadFile] = File(...), conf: float = Query(0.25, ge=0.0, le=1.0), scale: float = Query(10/46, gt=0.0)):
     if not model_manager.is_loaded():
         raise HTTPException(status_code=503, detail="Model not loaded")
     if not files:
@@ -58,7 +58,7 @@ async def predict(files: List[UploadFile] = File(...),conf: float = Query(0.25, 
     if not images_data:
         raise HTTPException(status_code=400, detail="All uploaded files were empty")
 
-    results = batch_inference(model_manager.get_model(), images_data, conf_threshold=conf)
+    results = batch_inference(model_manager.get_model(), images_data, conf_threshold=conf, um_per_px=scale)
     cleaned_results = []
     for res in results:
         one_result = {

@@ -2,21 +2,58 @@ import io
 import logging
 import numpy as np
 from PIL import Image
+import cv2
 
 logger = logging.getLogger(__name__)
 
 NON_COUNTABLE_CLASSES = {"non_countable_area"}  #addwhen non-countable classes are known
 UM_PER_PX = 10 / 46  # 10 um = 46 px, manually gotten from image (GIMP <3)
 
-
-# TDOD: add logging and stuff
-
 def mask_to_bbox(binary_mask: np.ndarray):
     """
     takes a binary mask and returns the tightest bounding box around it by finding the min/max row and column indices of all True pixels.
     """
     ys, xs = np.where(binary_mask)
+    if ys.size == 0 or xs.size == 0:
+        raise ValueError("mask_to_bbox received an empty mask")
     return [float(xs.min()), float(ys.min()), float(xs.max()), float(ys.max())]
+
+
+def add_closest_stomata_distance(stomata_metadata: list[dict], um_per_px: float):
+    """
+    Adds nearest-neighbor distance for each stomata based on centroid (!!!!!!!!) distance.
+    distance is stored in pixels, micrometers, and millimeters.
+    """
+    if not stomata_metadata:
+        logger.debug("No stomata metadata provided for nearest-neighbor distance calculation")
+        return stomata_metadata
+
+    centroids = np.array([[s["centroid_x"], s["centroid_y"]] for s in stomata_metadata], dtype=float)
+
+    for i, stomata in enumerate(stomata_metadata):
+        diff = centroids - centroids[i]
+        distances = np.sqrt(np.sum(diff**2, axis=1))
+        distances[i] = np.inf  # ignore distance to itself
+        min_dist_px = distances.min()
+        if np.isinf(min_dist_px):
+            min_dist_px = None
+
+        stomata["closest_stomata_distance_px"] = float(min_dist_px) if min_dist_px is not None else None
+        stomata["closest_stomata_distance_um"] = float(min_dist_px * um_per_px) if min_dist_px is not None else None
+        stomata["closest_stomata_distance_mm"] = float(min_dist_px * um_per_px / 1000) if min_dist_px is not None else None
+
+    return stomata_metadata
+
+
+def get_ellipse_length(binary_mask: np.ndarray):
+    ys, xs = np.where(binary_mask)
+    points = np.column_stack([xs, ys]).astype(np.float32)
+    if len(points) < 5: # Just in case, this should never happen with a real stomata
+        logger.debug(f"Too few points for ellipse fitting: {len(points)}")
+        return None, None
+    ellipse = cv2.fitEllipse(points)
+    (cx, cy), (minor_axis, major_axis), angle = ellipse
+    return float(major_axis), float(minor_axis)
 
 
 def build_metadata(binary_mask: np.ndarray, instance_id: int, class_id: int, class_name: str, confidence: float, um_per_px: float):
@@ -26,8 +63,12 @@ def build_metadata(binary_mask: np.ndarray, instance_id: int, class_id: int, cla
     area, bbox, dimensions, centroid, all in both pixel and um units.
     """
     pixel_area = int(binary_mask.sum())
+    if pixel_area == 0:
+        raise ValueError(f"Empty mask encountered for instance_id={instance_id}")
+
     x1, y1, x2, y2 = mask_to_bbox(binary_mask)
     ys, xs = np.where(binary_mask)
+    ellipse_length_px, ellipse_width_px = get_ellipse_length(binary_mask)
 
     return {
         "instance_id": instance_id,
@@ -36,6 +77,8 @@ def build_metadata(binary_mask: np.ndarray, instance_id: int, class_id: int, cla
         "confidence": float(confidence),
         "pixel_area": pixel_area,
         "area_um2": float(pixel_area * um_per_px ** 2),
+        "stomata_length_um": ellipse_length_px * um_per_px if ellipse_length_px is not None else None, # tbh not sure if they want in mm or um?
+        "stomata_length_mm": (ellipse_length_px * um_per_px)/1000 if ellipse_length_px is not None else None,
         "bbox_xyxy": [x1, y1, x2, y2],
         "width_px": float(x2 - x1),
         "height_px": float(y2 - y1),
@@ -49,6 +92,7 @@ def density_per_mm2(stomata_count: int, countable_pixels: int, um_per_px: float)
     converts the pixel-based density into mm^2 using the know value for pixels per 10 um, then dividing stomata count by that area.
     """
     if not um_per_px or countable_pixels == 0:
+        logger.warning(f"Invalid or empty pixel based density")
         return None
     countable_mm2 = countable_pixels * (um_per_px ** 2) / 1e6
     return stomata_count / countable_mm2
@@ -62,6 +106,7 @@ def process_detections(result, um_per_px = UM_PER_PX):
     stomata_metadata = []
 
     if result.masks is None:
+        logger.info(f"No masks found in the result")
         return stomata_metadata, {}
 
     # masks are paired 1-to-1 with boxes, confidence and class come from there mask is float [0,1], at model resolution
@@ -96,6 +141,7 @@ def process_detections(result, um_per_px = UM_PER_PX):
             continue
         stomata_metadata.append(build_metadata(binary, i, cls_id, cls_name, conf, um_per_px))
 
+    stomata_metadata = add_closest_stomata_distance(stomata_metadata, um_per_px)
     stomata_count = len(stomata_metadata)
     total_pixels  = int(img_h * img_w)
 
@@ -112,7 +158,7 @@ def process_detections(result, um_per_px = UM_PER_PX):
     return stomata_metadata, density_info
 
 
-def run_inference(model, image_bytes: bytes, conf_threshold: float):
+def run_inference(model, image_bytes: bytes, conf_threshold: float, um_per_px: float):
     """
     handles a single image end-to-end: decodes the bytes, runs the YOLO model, passes the result to process_detections, and returns the structured response dict.
     """
@@ -121,7 +167,7 @@ def run_inference(model, image_bytes: bytes, conf_threshold: float):
         img_array = np.array(image)
 
         result = model(img_array, conf=conf_threshold)[0]
-        stomata_metadata, density_info = process_detections(result)
+        stomata_metadata, density_info = process_detections(result, um_per_px=um_per_px)
 
         return {"success": True, "density_info": density_info, "stomata": stomata_metadata}
 
@@ -130,14 +176,14 @@ def run_inference(model, image_bytes: bytes, conf_threshold: float):
         raise
 
 
-def batch_inference(model, images_data: list[tuple[str, bytes]], conf_threshold: float):
+def batch_inference(model, images_data: list[tuple[str, bytes]], conf_threshold: float, um_per_px: float):
     """
     honsetly no need for docstring here
     """
     results_out = []
 
     for index, (filename, image_bytes) in enumerate(images_data):
-        res = run_inference(model, image_bytes, conf_threshold)
+        res = run_inference(model, image_bytes, conf_threshold, um_per_px)
         res["filename"] = filename
         res["index"] = index
         results_out.append(res)
