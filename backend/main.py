@@ -32,6 +32,7 @@ app.add_middleware(
         "stoma-ml-api-stoma-ml.apps.ocp-bm-0.k8s.it.helsinki.fi",
         "localhost",
         "127.0.0.1",
+        "backend",
     ],
 )
 @app.get("/")
