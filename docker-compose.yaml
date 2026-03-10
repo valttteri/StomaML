@@ -1,14 +1,14 @@
 services:
   backend:
-    image: stoma-api:latest
+    build: ./backend
     ports:
-      - "8000:8000"
+      - "8080:8080"
 
   frontend:
-    image: stoma-frontend:latest
+    build: ./frontend
     ports:
-      - "8501:8501"
+      - "8050:8050"
     environment:
-      API_URL: http://backend:8000/predict
+      API_URL: http://backend:8080/predict
     depends_on:
       - backend

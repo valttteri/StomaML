@@ -166,7 +166,7 @@ def run_inference(model, image_bytes: bytes, conf_threshold: float, um_per_px: f
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         img_array = np.array(image)
 
-        result = model(img_array, conf=conf_threshold, imgsz=640, retina_masks=True)[0]
+        result = model(img_array, conf=conf_threshold, imgsz=640, retina_masks=True, rect=False)[0] # may need to be changed when final model decided
         stomata_metadata, density_info = process_detections(result, um_per_px=um_per_px)
 
         return {"success": True, "density_info": density_info, "stomata": stomata_metadata}
