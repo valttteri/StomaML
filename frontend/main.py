@@ -116,7 +116,7 @@ def main():
             label="Confidence threshold",
             min_value=0.01,
             max_value=0.99,
-            value=0.5,
+            value=1/2,
             step=0.01,
             format="%0.2f",
             placeholder="Enter value",
