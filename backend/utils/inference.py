@@ -7,7 +7,6 @@ import cv2
 logger = logging.getLogger(__name__)
 
 NON_COUNTABLE_CLASSES = {"non_countable_area"}  #addwhen non-countable classes are known
-UM_PER_PX = 10 / 46  # 10 um = 46 px, manually gotten from image (GIMP <3)
 
 def mask_to_bbox(binary_mask: np.ndarray):
     """
@@ -98,7 +97,7 @@ def density_per_mm2(stomata_count: int, countable_pixels: int, um_per_px: float)
     return stomata_count / countable_mm2
 
 
-def process_detections(result, um_per_px = UM_PER_PX):
+def process_detections(result, um_per_px):
     """
     Takes a raw YOLO result, iterates over all detections, separates non-countable area masks from stomata, 
     builds the union non-countable mask, then calls build_metadata for each stomata instance and assembles the density_info summary.
