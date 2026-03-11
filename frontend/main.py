@@ -99,8 +99,8 @@ def main():
     # Columns for Image scale, Files uploaded and Clear files
     col1, col2 = st.columns(spec=[1, 1], gap="medium", width=600) 
 
-    # Slider for defining image scale in um / pixel
     with col1:
+        # Box for defining image scale in um / pixel
         scale_value = st.number_input(
             label="Image scale ($\mu$*m* / pixel)",
             min_value=0.0000000001,
@@ -108,7 +108,19 @@ def main():
             value=10/46,
             step=0.0000000001,
             format="%0.10f",
-            placeholder="Enter value"
+            placeholder="Enter value",
+            help=r"The default image scale is 10$\mu$*m* / 46px $\approx$ 0,217"
+        )
+        # Box for defining confidence threshold
+        conf_value = st.number_input(
+            label="Confidence threshold",
+            min_value=0.01,
+            max_value=0.99,
+            value=0.5,
+            step=0.01,
+            format="%0.2f",
+            placeholder="Enter value",
+            help="Set the minimum confidence threshold for detections."
         )
 
     with col2:
@@ -153,7 +165,7 @@ def main():
 
                     # api_json contains inference results of a single image
                     start = datetime.now()
-                    api_json = call_api_with_files(temp_path, conf=0.25, scale=scale_value)
+                    api_json = call_api_with_files(temp_path, conf=conf_value, scale=scale_value)
                     end = datetime.now()
 
                     inference_time = end - start
