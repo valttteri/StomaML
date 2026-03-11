@@ -6,7 +6,8 @@ import cv2
 
 logger = logging.getLogger(__name__)
 
-NON_COUNTABLE_CLASSES = {"non_countable_area"}  #addwhen non-countable classes are known
+COUNTABLE_OVERLAP_THRESHOLD = 0.5 # so a stomata is excluded from the total if its are overlaps >50% with a non countable region
+NON_COUNTABLE_CLASSES = {"nothing", "trichome", "vein"}
 
 def mask_to_bbox(binary_mask: np.ndarray):
     """
@@ -115,7 +116,7 @@ def process_detections(result, um_per_px):
     img_h, img_w = result.orig_shape
 
     non_countable_mask = np.zeros((img_h, img_w), dtype=bool) # kind of useful later, now kind of redundant
-    stomata_items= []
+    stomata_candidates= []
 
     for mask_float, conf, cls in zip(masks_float, confidences, class_ids):
         cls_id   = int(cls)
@@ -130,19 +131,30 @@ def process_detections(result, um_per_px):
         if cls_name in NON_COUNTABLE_CLASSES:
             non_countable_mask |= binary  # <- union: any pixel flagged by any non-countable instance
             
-        else:
-            stomata_items.append((binary, cls_id, cls_name, float(conf)))
+        elif cls_name == "stomata":
+            stomata_candidates.append((binary, cls_id, cls_name, float(conf)))
 
-    countable_pixels = int((~non_countable_mask).sum())  # <- everything not masked off
+    countable_mask = ~non_countable_mask # everything not in non countables
+    countable_pixels = int(countable_mask.sum()) 
 
-    for i, (binary, cls_id, cls_name, conf) in enumerate(stomata_items):
-        if binary.sum() == 0:
+    kept_index = 0
+    for binary, cls_id, cls_name, conf in stomata_candidates:
+        stomata_pixels = int(binary.sum())
+        if stomata_pixels == 0:
             continue
-        stomata_metadata.append(build_metadata(binary, i, cls_id, cls_name, conf, um_per_px))
+
+        stomata_in_countable = int((binary & countable_mask).sum())
+        overlap_fraction = stomata_in_countable / stomata_pixels
+
+        if overlap_fraction >= COUNTABLE_OVERLAP_THRESHOLD:
+            meta = build_metadata(binary, kept_index, cls_id, cls_name, conf, um_per_px)
+            meta["fraction_in_countable_area"] = float(overlap_fraction)
+            stomata_metadata.append(meta)
+            kept_index += 1
 
     stomata_metadata = add_closest_stomata_distance(stomata_metadata, um_per_px)
     stomata_count = len(stomata_metadata)
-    total_pixels  = int(img_h * img_w)
+    total_pixels = int(img_h * img_w)
 
     density_info = {
         "total_pixels": total_pixels,
@@ -163,7 +175,7 @@ def run_inference(model, image_bytes: bytes, conf_threshold: float, um_per_px: f
     """
     try:
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-        result = model(image, conf=conf_threshold, imgsz=640, retina_masks=True, rect=False)[0] # may need to be changed when final model decided
+        result = model(image, conf=conf_threshold, imgsz=640, retina_masks=True, rect=False, iou = 0.25)[0]
         stomata_metadata, density_info = process_detections(result, um_per_px=um_per_px)
 
         return {"success": True, "density_info": density_info, "stomata": stomata_metadata}
