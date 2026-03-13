@@ -5,7 +5,7 @@
 \usepackage{amsmath}
 
 \title{Technical Handover: StomaML}
-\author{Mia Lindblad, Valtteri Ahola, Markus Tarma, Soumyadipta Kar}
+\author{Mia Lindblad, Valtteri Ahola, Markus Tarma, Soumyadipta Kar, Miika Mäki}
 \date{March 2026}
 
 \begin{document}
@@ -817,10 +817,9 @@ Since the backend is the scientific core, even small logic changes here can alte
 
 The deployed version runs on OpenShift in containers. The frontend and backend are separate services, each with its own container image and runtime configuration. Communication between them depends on correct routing and environment settings.
 
-This section documents the application-specific deployment assumptions for running StomaML on OpenShift. It is not a guide to OpenShift platform administration in general.
+This section documents the application-specific deployment assumptions for running StomaML on OpenShift. It is not a guide to OpenShift platform administration in general. For more information, see the official OpenShift documentation: \href{https://docs.redhat.com/en/documentation/openshift_container_platform/4.21}{https://docs.redhat.com/en/documentation/openshift\_container\_platform/4.21}.
 
-From the application's perspective, the key deployment facts are:
-
+From the application's perspective, the key deployment facts are as follows:
 \begin{itemize}
     \item the frontend and backend are deployed separately,
     \item the frontend needs the correct backend prediction endpoint,
