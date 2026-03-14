@@ -11,7 +11,7 @@ CLASS_COLORS = {
 }
 
 
-def _color_for_class(class_name: str):
+def color_for_class(class_name: str):
     return CLASS_COLORS.get(class_name, (0, 200, 255))
 
 
@@ -25,7 +25,7 @@ def render_detection_overlay(image_pil: Image.Image, instances: list[dict], alph
         confidence = instance["confidence"]
         x1, y1, x2, y2 = [int(v) for v in instance["bbox_xyxy"]]
 
-        color = _color_for_class(class_name)
+        color = color_for_class(class_name)
         overlay[mask] = color
 
         contours, _ = cv2.findContours(mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)

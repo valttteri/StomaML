@@ -1,4 +1,5 @@
 streamlit==1.53.1
+python-dotenv
 ultralytics==8.4.12
 opencv-python-headless
 numpy
