@@ -177,7 +177,10 @@ def main():
                     metadata = response_data["stomata"]
 
                     # Save data from a single inference result
-                    metadata_arr.append(metadata)
+                    metadata_arr.append({
+                        "filename": filename,
+                        "stomata": metadata
+                    })
                     filename_arr.append(filename)
                     density_info_arr.append(density_info)
 
@@ -202,7 +205,15 @@ def main():
             "stomata_count",
             "stomatal_density_per_px2",
             "um_per_px",
-            "stomatal_density_per_mm2"
+            "stomatal_density_per_mm2",
+            "avg_stomatal_length_px",
+            "avg_stomatal_length_um",
+            "avg_stomatal_length_mm",
+            "avg_stomatal_area_px",
+            "avg_stomatal_area_um2",
+            "avg_closest_stomata_distance_px",
+            "avg_closest_stomata_distance_um",
+            "avg_closest_stomata_distance_mm",
         ]
 
         df = pd.DataFrame(data=density_info_arr, columns=df_cols)
