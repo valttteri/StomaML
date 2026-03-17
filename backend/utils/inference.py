@@ -77,7 +77,8 @@ def build_metadata(binary_mask: np.ndarray, instance_id: int, class_id: int, cla
         "confidence": float(confidence),
         "pixel_area": pixel_area,
         "area_um2": float(pixel_area * um_per_px ** 2),
-        "stomata_length_um": ellipse_length_px * um_per_px if ellipse_length_px is not None else None, # tbh not sure if they want in mm or um?
+        "stomata_length_px": float(ellipse_length_px) if ellipse_length_px is not None else None,
+        "stomata_length_um": ellipse_length_px * um_per_px if ellipse_length_px is not None else None,
         "stomata_length_mm": (ellipse_length_px * um_per_px)/1000 if ellipse_length_px is not None else None,
         "bbox_xyxy": [x1, y1, x2, y2],
         "width_px": float(x2 - x1),
@@ -98,6 +99,12 @@ def density_per_mm2(stomata_count: int, countable_pixels: int, um_per_px: float)
     return stomata_count / countable_mm2
 
 
+def mean_from_metadata(stomata_metadata: list[dict], key: str):
+    values = [s[key] for s in stomata_metadata if s.get(key) is not None]
+    if not values:
+        return None
+    return float(np.mean(values))
+
 def process_detections(result, um_per_px):
     """
     Takes a raw YOLO result, iterates over all detections, separates non-countable area masks from stomata, 
@@ -115,7 +122,7 @@ def process_detections(result, um_per_px):
     class_ids = result.boxes.cls.cpu().numpy()
     img_h, img_w = result.orig_shape
 
-    non_countable_mask = np.zeros((img_h, img_w), dtype=bool) # kind of useful later, now kind of redundant
+    non_countable_mask = np.zeros((img_h, img_w), dtype=bool)
     stomata_candidates= []
 
     for mask_float, conf, cls in zip(masks_float, confidences, class_ids):
@@ -164,6 +171,14 @@ def process_detections(result, um_per_px):
         "stomatal_density_per_px2": float(stomata_count / countable_pixels) if countable_pixels else None,
         "um_per_px": um_per_px,
         "stomatal_density_per_mm2": density_per_mm2(stomata_count, countable_pixels, um_per_px),
+        "avg_stomatal_length_px": mean_from_metadata(stomata_metadata, "stomata_length_px"),
+        "avg_stomatal_length_um": mean_from_metadata(stomata_metadata, "stomata_length_um"),
+        "avg_stomatal_length_mm": mean_from_metadata(stomata_metadata, "stomata_length_mm"),
+        "avg_stomatal_area_px": mean_from_metadata(stomata_metadata, "pixel_area"),
+        "avg_stomatal_area_um2": mean_from_metadata(stomata_metadata, "area_um2"),
+        "avg_closest_stomata_distance_px": mean_from_metadata(stomata_metadata, "closest_stomata_distance_px"),
+        "avg_closest_stomata_distance_um": mean_from_metadata(stomata_metadata, "closest_stomata_distance_um"),
+        "avg_closest_stomata_distance_mm": mean_from_metadata(stomata_metadata, "closest_stomata_distance_mm"),
     }
 
     return stomata_metadata, density_info
