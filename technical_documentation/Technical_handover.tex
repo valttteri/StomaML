@@ -236,6 +236,12 @@ The \texttt{density\_info} object contains the following fields:
     \[
     \texttt{stomatal\_density\_per\_mm2} = \frac{\texttt{stomata\_count}}{\text{countable area in mm}^2}
     \]
+
+    \item \texttt{avg\_stomatal\_length\_px}, \texttt{avg\_stomatal\_length\_um} and \texttt{avg\_stomatal\_length\_mm} -- Average length of the stomata in pixels, micrometers and millimeters, respectively. The length is estimated by fitting an ellipse on the mask using OpenCV's cv2.fitEllipse. If the mask has less than five points, fitting an ellipse is not possible and these values are \texttt{None}.
+    
+    \item \texttt{avg\_stomatal\_size\_px} and \texttt{avg\_stomatal\_size\_um2} -- Average area of the stomata in pixels and square micrometers.
+    
+    \item \texttt{avg\_closest\_stomata\_distance\_px}, \texttt{avg\_closest\_stomata\_distance\_um} and \texttt{avg\_closest\_stomata\_distance\_mm} -- The average Euclidean distance from a stomata to the nearest stomata in pixels, micrometers and millimiters, respectively. The Euclidean distance is measured between the centroids of the stomata. If there is only one stomata in the image, these are \texttt{None}.  
 \end{itemize}
 
 \subsection{Stomata-level metadata output}
