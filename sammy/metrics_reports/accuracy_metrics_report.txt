@@ -1,0 +1,40 @@
+================================================================================
+STOMATA DETECTION MODEL - ACCURACY METRICS REPORT
+================================================================================
+Generated: 2026-03-17 11:39:15
+
+VALIDATION SET ACCURACY METRICS
+--------------------------------------------------------------------------------
+  mAP50 (IoU=0.50): 0.0000
+  mAP50-95 (IoU=0.5:0.95): 0.0000
+  Precision: 0.0000 (0.00%)
+  Recall: 0.0000 (0.00%)
+
+TEST SET ACCURACY METRICS
+--------------------------------------------------------------------------------
+  mAP50 (IoU=0.50): 0.0000
+  mAP50-95 (IoU=0.5:0.95): 0.0000
+  Precision: 0.0000 (0.00%)
+  Recall: 0.0000 (0.00%)
+
+================================================================================
+METRIC INTERPRETATION
+================================================================================
+  mAP50: Precision & recall at IoU threshold of 0.50
+    - > 0.9: Excellent | 0.7-0.9: Good | 0.5-0.7: Fair | < 0.5: Poor
+
+  mAP50-95: Average precision across IoU thresholds 0.5 to 0.95
+    - Stricter evaluation metric | More indicative of real-world performance
+
+  Precision: Of detected objects, how many are correct
+    - Formula: TP / (TP + FP)
+
+  Recall: Of actual objects, how many were correctly detected
+    - Formula: TP / (TP + FN)
+
+PERFORMANCE SUMMARY
+--------------------------------------------------------------------------------
+  Validation Set Performance: POOR ⭐
+  Test Set Performance: POOR ⭐
+
+  Model is working: ✗ NO - Model needs improvement

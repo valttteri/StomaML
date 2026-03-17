@@ -1,0 +1,7 @@
+path: /Users/soumyadiptakar2002/Desktop/2025UHEL/Homework/Github Stuff/Stomata/StomaML/sammy/stomata-batch-1-18
+train: train
+val: valid
+test: test
+
+nc: 4
+names: ['Class_0', 'Class_1', 'Class_2', 'Class_3']

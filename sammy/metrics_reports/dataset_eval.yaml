@@ -1,0 +1,11 @@
+path: /Users/soumyadiptakar2002/Desktop/2025UHEL/Homework/Github Stuff/Stomata/StomaML/sammy/stomata-batch-1-18
+train: /Users/soumyadiptakar2002/Desktop/2025UHEL/Homework/Github Stuff/Stomata/StomaML/sammy/stomata-batch-1-18/train/_annotations.coco.json
+val: /Users/soumyadiptakar2002/Desktop/2025UHEL/Homework/Github Stuff/Stomata/StomaML/sammy/stomata-batch-1-18/valid/_annotations.coco.json
+test: /Users/soumyadiptakar2002/Desktop/2025UHEL/Homework/Github Stuff/Stomata/StomaML/sammy/stomata-batch-1-18/test/_annotations.coco.json
+nc: 5
+names:
+  0: stomata
+  1: nothing
+  2: stomata
+  3: trichome
+  4: vein

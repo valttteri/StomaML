@@ -1,0 +1,6 @@
+{
+  "timestamp": "2026-03-17T11:39:15.547950",
+  "model": "YOLO Stomata Detection",
+  "validation_metrics": {},
+  "test_metrics": {}
+}
